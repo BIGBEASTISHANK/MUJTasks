@@ -1,6 +1,7 @@
 "use client";
 import { NavbarData } from "@@/data/NavbarData";
 import { motion } from "motion/react";
+import Link from "next/link";
 
 export default function Navbar() {
   return (
@@ -12,9 +13,9 @@ export default function Navbar() {
         className="w-full bg-[#1793D1] shadow-2xl shadow-[#1793D1]/50 rounded-3xl py-2 px-5 flex items-center"
       >
         {/* Heading */}
-        <a href="/#home" className="text-3xl font-bold hidden sm:flex">
+        <Link href="/#home" className="text-3xl font-bold hidden sm:flex">
           MUJ Tasks
-        </a>
+        </Link>
 
         {/* Navbar Items */}
         <ul className="flex gap-4 sm:ml-auto sm:mr-0 mx-auto">
@@ -23,7 +24,7 @@ export default function Navbar() {
               key={index}
               className="text-white hover:text-gray-200 hover:scale-[1.1] transition-all duration-300 ease-in-out text-lg"
             >
-              <a href={item.href}>{item.name}</a>
+              <Link href={item.href}>{item.name}</Link>
             </li>
           ))}
         </ul>
