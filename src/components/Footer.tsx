@@ -1,6 +1,6 @@
 "use client";
 import { motion } from "motion/react";
-import { FaGithub, FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
+import { FaGithub, FaInstagram, FaLinkedin } from "react-icons/fa";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();

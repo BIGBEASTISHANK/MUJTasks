@@ -1,15 +1,15 @@
 "use client";
 import { useState, ChangeEvent, FormEvent } from "react";
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
 
 export default function AssignmentForm() {
   const [formData, setFormData] = useState({
     name: "",
     branch: "",
     mobile: "",
-    pages: "",
+    estimatedPages: "",
     subject: "",
-    timeToComplete: "",
+    deadline: "",
   });
   
   const [file, setFile] = useState<File | null>(null);
@@ -17,6 +17,7 @@ export default function AssignmentForm() {
   const [mobileError, setMobileError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -56,7 +57,7 @@ export default function AssignmentForm() {
     }
   };
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     
     // Validate mobile number
@@ -72,11 +73,46 @@ export default function AssignmentForm() {
     }
     
     setIsSubmitting(true);
+    setSubmitError("");
     
-    // Simulate form submission
     try {
-      // Here you would normally send the data to your backend
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Create FormData object for file upload
+      const submitData = new FormData();
+      submitData.append("name", formData.name);
+      submitData.append("branch", formData.branch);
+      submitData.append("mobile", formData.mobile);
+      submitData.append("estimatedPages", formData.estimatedPages);
+      submitData.append("subject", formData.subject);
+      submitData.append("deadline", formData.deadline);
+      submitData.append("file", file);
+      
+      // Log the data being sent for debugging
+      console.log("Submitting form with data:", {
+        name: formData.name,
+        branch: formData.branch,
+        mobile: formData.mobile,
+        estimatedPages: formData.estimatedPages,
+        subject: formData.subject,
+        deadline: formData.deadline,
+        fileName: file.name,
+        fileSize: file.size
+      });
+      
+      // Send data to API endpoint
+      const response = await fetch("/api/AssignmentFormSubmission", {
+        method: "POST",
+        body: submitData,
+      });
+      
+      // Log the response status for debugging
+      console.log("Response status:", response.status);
+      
+      const result = await response.json();
+      console.log("Response data:", result);
+      
+      if (!response.ok) {
+        throw new Error(result.error || result.details || "Failed to submit form");
+      }
       
       setSubmitSuccess(true);
       
@@ -86,16 +122,17 @@ export default function AssignmentForm() {
           name: "",
           branch: "",
           mobile: "",
-          pages: "",
+          estimatedPages: "",
           subject: "",
-          timeToComplete: "",
+          deadline: "",
         });
         setFile(null);
         setSubmitSuccess(false);
-      }, 3000);
+      }, 10000);
       
     } catch (error) {
       console.error("Error submitting form:", error);
+      setSubmitError(error instanceof Error ? error.message : "Failed to submit form");
     } finally {
       setIsSubmitting(false);
     }
@@ -134,6 +171,12 @@ export default function AssignmentForm() {
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-6">
+              {submitError && (
+                <div className="bg-red-500/10 border border-red-500 text-red-500 p-4 rounded-lg mb-6">
+                  {submitError}
+                </div>
+              )}
+              
               <div className="grid md:grid-cols-2 gap-6">
                 {/* Name Field */}
                 <div>
@@ -192,14 +235,14 @@ export default function AssignmentForm() {
 
                 {/* Estimated Pages Field */}
                 <div>
-                  <label htmlFor="pages" className="block text-gray-200 mb-2 font-medium">
+                  <label htmlFor="estimatedPages" className="block text-gray-200 mb-2 font-medium">
                     Estimated Pages
                   </label>
                   <input
                     type="number"
-                    id="pages"
-                    name="pages"
-                    value={formData.pages}
+                    id="estimatedPages"
+                    name="estimatedPages"
+                    value={formData.estimatedPages}
                     onChange={handleInputChange}
                     required
                     min="1"
@@ -227,14 +270,14 @@ export default function AssignmentForm() {
 
                 {/* Time to Complete Field */}
                 <div>
-                  <label htmlFor="timeToComplete" className="block text-gray-200 mb-2 font-medium">
+                  <label htmlFor="deadline" className="block text-gray-200 mb-2 font-medium">
                     Deadline
                   </label>
                   <input
                     type="date"
-                    id="timeToComplete"
-                    name="timeToComplete"
-                    value={formData.timeToComplete}
+                    id="deadline"
+                    name="deadline"
+                    value={formData.deadline}
                     onChange={handleInputChange}
                     required
                     min={new Date().toISOString().split('T')[0]}
