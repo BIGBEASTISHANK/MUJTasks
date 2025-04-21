@@ -31,6 +31,7 @@ export default function RootLayout({
           src="https://cdn.counter.dev/script.js"
           data-id="97b223ea-ee69-4ce7-8e2c-dd4875f6565a"
           data-utcoffset="6"
+          async
         ></script>
       </head>
       <body className={`${geistMono.className}`}>
