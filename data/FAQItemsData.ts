@@ -29,9 +29,4 @@ export const faqItems = [
       answer:
         "Yes, all assignments are written from scratch and tailored to your specific requirements. We do not reuse or resell assignments. Our work is original and passes plagiarism checks.",
     },
-    {
-      question: "What other services will you offer in the future?",
-      answer:
-        "We're planning to expand our services to include project assistance, exam preparation materials, research paper writing, technical workshops, and more. Stay tuned for announcements about new services!",
-    },
   ];
