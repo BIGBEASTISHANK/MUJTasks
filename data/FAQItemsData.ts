@@ -28,5 +28,49 @@ export const faqItems = [
       question: "Do you guarantee originality?",
       answer:
         "Yes, all assignments are written from scratch and tailored to your specific requirements. We do not reuse or resell assignments. Our work is original and passes plagiarism checks.",
+    },{
+      question: "Can you help me choose a unique and innovative CSE project topic?",
+      answer:
+        "Absolutely! We offer personalized guidance to help you select a project topic that matches your interests and academic requirements, including trending areas like AI, machine learning, web development, and more.[2][4][5]",
+    },
+    {
+      question: "What kind of CSE projects do you assist with?",
+      answer:
+        "We assist with all types of CSE projects, including minor, major, and mini projects. Our team can help with software development, coding, debugging, documentation, algorithm design, and even advanced domains like AI, IoT, and blockchain.[2][4][5]",
+    },
+    {
+      question: "Do you provide coding and debugging support?",
+      answer:
+        "Yes, we offer comprehensive coding assistance, including writing, reviewing, and debugging code in languages such as Python, Java, C++, and more. We ensure your project runs smoothly and meets academic guidelines.[2][4]",
+    },
+    {
+      question: "Will I get help with project documentation and reports?",
+      answer:
+        "Definitely. We provide well-structured documentation and reports that adhere to university and industry standards, including flowcharts, algorithms, and technical write-ups to support your project submission.[2][4]",
+    },
+    {
+      question: "Can you help with urgent or last-minute CSE projects?",
+      answer:
+        "Yes, we offer flexible turnaround times and can assist with urgent project requests, depending on complexity and requirements. Reach out as soon as possible for the best support.[2][6]",
+    },
+    {
+      question: "Is my project kept confidential?",
+      answer:
+        "Absolutely. Your project details and personal information are kept secure and confidential. We never share or reuse your project with third parties.[2][4]",
+    },
+    {
+      question: "Can I request changes or feedback during the project?",
+      answer:
+        "Yes, we encourage your feedback throughout the project development process. You can request modifications at any stage to ensure the final project meets your expectations and academic needs.[2]",
+    },
+    {
+      question: "Do you help with advanced and research-based projects?",
+      answer:
+        "Yes, our experts can assist with advanced and research-oriented projects in areas like AI, data science, cloud computing, and more. We tailor our support to your project's complexity and goals.[2][4][5]",
+    },
+    {
+      question: "How long does it take to complete a CSE project?",
+      answer:
+        "Project timelines depend on complexity, but most projects are completed within 2–4 weeks. We also offer faster delivery for urgent requests when possible.[2]",
     },
   ];

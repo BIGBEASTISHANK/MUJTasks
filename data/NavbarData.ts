@@ -4,8 +4,12 @@ export const NavbarData: { name: string; href: string }[] = [
     href: "/#home",
   },
   {
-    name: "Form",
-    href: "/#form",
+    name: "Assignments",
+    href: "/#assignment",
+  },
+  {
+    name: "Projects",
+    href: "/#cse-project",
   },
   {
     name: "FAQ",

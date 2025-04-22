@@ -16,7 +16,7 @@ export default function Hero() {
               <span className="text-[#1793D1]">MUJ Tasks</span> - Your Academic Solution
             </h1>
             <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto">
-              Don't let assignments and lab manuals overwhelm your college experience
+              Don't let assignments, lab manuals & projects overwhelm your college experience
             </p>
           </div>
 
@@ -30,7 +30,7 @@ export default function Hero() {
             <div className="grid md:grid-cols-3 gap-6 text-left">
               <div className="bg-[#1A1E23] p-5 rounded-xl shadow-md hover:shadow-[#1793D1]/20 hover:scale-105 transition-all duration-300">
                 <h3 className="text-xl font-bold mb-2 text-[#1793D1]">Quality Work</h3>
-                <p className="text-gray-300">Get expertly crafted assignments from our skilled writers who understand MUJ requirements.</p>
+                <p className="text-gray-300">Get expertly crafted assignments/projects from our skilled writers/coders who understand MUJ requirements.</p>
               </div>
               <div className="bg-[#1A1E23] p-5 rounded-xl shadow-md hover:shadow-[#1793D1]/20 hover:scale-105 transition-all duration-300">
                 <h3 className="text-xl font-bold mb-2 text-[#1793D1]">On-Time Delivery</h3>
@@ -50,11 +50,11 @@ export default function Hero() {
             className="flex flex-col sm:flex-row gap-4 justify-center"
           >
             <a 
-              href="#form" 
+              href="#assignment" 
               className="bg-[#1793D1] hover:scale-[1.1] text-white border-2 border-[#1793D1] font-bold py-3 px-8 rounded-full transition-all duration-300"
             >
-              Submit Request
-            </a>
+              Assignment Form
+            </ a>
             <a 
               href="#faq" 
               className="bg-transparent hover:bg-white/10 hover:scale-[1.1] text-white border-2 border-[#1793D1] font-bold py-3 px-8 rounded-full transition-all duration-300"

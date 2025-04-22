@@ -2,16 +2,16 @@
 import { useState, ChangeEvent, FormEvent } from "react";
 import { motion } from "framer-motion";
 
-export default function AssignmentForm() {
+export default function CSEProjectAssistance() {
   const [formData, setFormData] = useState({
     name: "",
     branch: "",
     mobile: "",
-    estimatedPages: "",
-    subject: "",
+    projectTitle: "",
+    projectType: "",
     deadline: "",
   });
-  
+
   const [file, setFile] = useState<File | null>(null);
   const [fileError, setFileError] = useState("");
   const [mobileError, setMobileError] = useState("");
@@ -19,20 +19,16 @@ export default function AssignmentForm() {
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState("");
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    
+
     if (name === "mobile") {
-      // Only allow digits
       const digitsOnly = value.replace(/\D/g, "");
-      
-      // Validate mobile number length
       if (digitsOnly.length > 0 && digitsOnly.length !== 10) {
         setMobileError("Mobile number must be exactly 10 digits");
       } else {
         setMobileError("");
       }
-      
       setFormData({ ...formData, [name]: digitsOnly });
     } else {
       setFormData({ ...formData, [name]: value });
@@ -41,9 +37,7 @@ export default function AssignmentForm() {
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
-    
     if (selectedFile) {
-      // Check file size (15MB = 15 * 1024 * 1024 bytes)
       if (selectedFile.size > 15 * 1024 * 1024) {
         setFileError("File size must be less than 15MB");
         setFile(null);
@@ -59,79 +53,55 @@ export default function AssignmentForm() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    
-    // Validate mobile number
+
     if (formData.mobile.length !== 10) {
       setMobileError("Mobile number must be exactly 10 digits");
       return;
     }
-    
-    // Validate file
     if (!file) {
-      setFileError("Please upload your assignment or lab manual PDF");
+      setFileError("Please upload your project/problem statement PDF");
       return;
     }
-    
+
     setIsSubmitting(true);
     setSubmitError("");
-    
+
     try {
-      // Create FormData object for file upload
       const submitData = new FormData();
       submitData.append("name", formData.name);
       submitData.append("branch", formData.branch);
       submitData.append("mobile", formData.mobile);
-      submitData.append("estimatedPages", formData.estimatedPages);
-      submitData.append("subject", formData.subject);
+      submitData.append("projectTitle", formData.projectTitle);
+      submitData.append("projectType", formData.projectType);
       submitData.append("deadline", formData.deadline);
       submitData.append("file", file);
-      
-      // Log the data being sent for debugging
-      console.log("Submitting form with data:", {
-        name: formData.name,
-        branch: formData.branch,
-        mobile: formData.mobile,
-        estimatedPages: formData.estimatedPages,
-        subject: formData.subject,
-        deadline: formData.deadline,
-        fileName: file.name,
-        fileSize: file.size
-      });
-      
-      // Send data to API endpoint
-      const response = await fetch("/api/AssignmentFormSubmission", {
+
+      const response = await fetch("/api/ProjectAssistanceFormSubmission", {
         method: "POST",
         body: submitData,
       });
-      
-      // Log the response status for debugging
-      console.log("Response status:", response.status);
-      
+
       const result = await response.json();
-      console.log("Response data:", result);
-      
+
       if (!response.ok) {
         throw new Error(result.error || result.details || "Failed to submit form");
       }
-      
+
       setSubmitSuccess(true);
-      
-      // Reset form after 3 seconds
+
       setTimeout(() => {
         setFormData({
           name: "",
           branch: "",
           mobile: "",
-          estimatedPages: "",
-          subject: "",
+          projectTitle: "",
+          projectType: "",
           deadline: "",
         });
         setFile(null);
         setSubmitSuccess(false);
       }, 10000);
-      
     } catch (error) {
-      console.error("Error submitting form:", error);
       setSubmitError(error instanceof Error ? error.message : "Failed to submit form");
     } finally {
       setIsSubmitting(false);
@@ -139,7 +109,7 @@ export default function AssignmentForm() {
   };
 
   return (
-    <div id="assignment" className="py-16 px-4 scroll-mt-16">
+    <div id="cse-project" className="py-16 px-4 scroll-mt-16">
       <div className="max-w-4xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -149,10 +119,10 @@ export default function AssignmentForm() {
           className="text-center mb-10"
         >
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            <span className="text-[#1793D1]">Assignment</span> Form
+            <span className="text-[#1793D1]">CSE Project</span> Assistance
           </h2>
           <p className="text-lg text-gray-300 max-w-2xl mx-auto">
-            Fill out the form below with your assignment/labmanual details and we'll get back to you with a quote.
+            Need help with your CSE project? Submit your project details and requirements below, and our team will help you build your class project from scratch or assist wherever you need!
           </p>
         </motion.div>
 
@@ -167,7 +137,7 @@ export default function AssignmentForm() {
             <div className="text-center py-10">
               <div className="text-[#1793D1] text-6xl mb-4">✓</div>
               <h3 className="text-2xl font-bold text-white mb-2">Request Submitted!</h3>
-              <p className="text-gray-300">We'll contact you shortly to discuss your assignment.</p>
+              <p className="text-gray-300">We'll contact you shortly to discuss your project.</p>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -176,16 +146,16 @@ export default function AssignmentForm() {
                   {submitError}
                 </div>
               )}
-              
+
               <div className="grid md:grid-cols-2 gap-6">
                 {/* Name Field */}
                 <div>
-                  <label htmlFor="name" className="block text-gray-200 mb-2 font-medium">
+                  <label htmlFor="cse-name" className="block text-gray-200 mb-2 font-medium">
                     Full Name
                   </label>
                   <input
                     type="text"
-                    id="name"
+                    id="cse-name"
                     name="name"
                     value={formData.name}
                     onChange={handleInputChange}
@@ -197,29 +167,29 @@ export default function AssignmentForm() {
 
                 {/* Branch Field */}
                 <div>
-                  <label htmlFor="branch" className="block text-gray-200 mb-2 font-medium">
+                  <label htmlFor="cse-branch" className="block text-gray-200 mb-2 font-medium">
                     Branch
                   </label>
                   <input
                     type="text"
-                    id="branch"
+                    id="cse-branch"
                     name="branch"
                     value={formData.branch}
                     onChange={handleInputChange}
                     required
                     className="w-full bg-[#1A1E23] border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-[#1793D1] transition-all"
-                    placeholder="e.g., CSE, ECE, Mechanical"
+                    placeholder="e.g., CSE, IT"
                   />
                 </div>
 
                 {/* Mobile Number Field */}
                 <div>
-                  <label htmlFor="mobile" className="block text-gray-200 mb-2 font-medium">
+                  <label htmlFor="cse-mobile" className="block text-gray-200 mb-2 font-medium">
                     Mobile Number
                   </label>
                   <input
                     type="text"
-                    id="mobile"
+                    id="cse-mobile"
                     name="mobile"
                     value={formData.mobile}
                     onChange={handleInputChange}
@@ -233,49 +203,52 @@ export default function AssignmentForm() {
                   {mobileError && <p className="text-red-500 text-sm mt-1">{mobileError}</p>}
                 </div>
 
-                {/* Estimated Pages Field */}
+                {/* Project Title Field */}
                 <div>
-                  <label htmlFor="estimatedPages" className="block text-gray-200 mb-2 font-medium">
-                    Estimated Pages
-                  </label>
-                  <input
-                    type="number"
-                    id="estimatedPages"
-                    name="estimatedPages"
-                    value={formData.estimatedPages}
-                    onChange={handleInputChange}
-                    required
-                    min="1"
-                    className="w-full bg-[#1A1E23] border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-[#1793D1] transition-all"
-                    placeholder="Approximate number of pages"
-                  />
-                </div>
-
-                {/* Subject Field */}
-                <div>
-                  <label htmlFor="subject" className="block text-gray-200 mb-2 font-medium">
-                    Subject
+                  <label htmlFor="cse-projectTitle" className="block text-gray-200 mb-2 font-medium">
+                    Project Title
                   </label>
                   <input
                     type="text"
-                    id="subject"
-                    name="subject"
-                    value={formData.subject}
+                    id="cse-projectTitle"
+                    name="projectTitle"
+                    value={formData.projectTitle}
                     onChange={handleInputChange}
                     required
                     className="w-full bg-[#1A1E23] border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-[#1793D1] transition-all"
-                    placeholder="e.g., Data Structures, Thermodynamics"
+                    placeholder="e.g., Library Management System"
                   />
                 </div>
 
-                {/* Time to Complete Field */}
+                {/* Project Type Field */}
                 <div>
-                  <label htmlFor="deadline" className="block text-gray-200 mb-2 font-medium">
+                  <label htmlFor="cse-projectType" className="block text-gray-200 mb-2 font-medium">
+                    Project Type
+                  </label>
+                  <select
+                    id="cse-projectType"
+                    name="projectType"
+                    value={formData.projectType}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full bg-[#1A1E23] border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-[#1793D1] transition-all"
+                  >
+                    <option value="" disabled>Select type</option>
+                    <option value="minor">Minor Project</option>
+                    <option value="major">Major Project</option>
+                    <option value="mini">Mini Project</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+
+                {/* Deadline Field */}
+                <div>
+                  <label htmlFor="cse-deadline" className="block text-gray-200 mb-2 font-medium">
                     Deadline
                   </label>
                   <input
                     type="date"
-                    id="deadline"
+                    id="cse-deadline"
                     name="deadline"
                     value={formData.deadline}
                     onChange={handleInputChange}
@@ -288,12 +261,12 @@ export default function AssignmentForm() {
 
               {/* File Upload Field */}
               <div>
-                <label htmlFor="file" className="block text-gray-200 mb-2 font-medium">
-                  Upload Assignment/Lab Manual (PDF, max 15MB)
+                <label htmlFor="cse-file" className="block text-gray-200 mb-2 font-medium">
+                  Upload Project/Problem Statement (PDF, max 15MB)
                 </label>
                 <div className="flex items-center justify-center w-full">
                   <label
-                    htmlFor="file"
+                    htmlFor="cse-file"
                     className={`flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer hover:bg-[#1A1E23]/70 ${
                       fileError ? "border-red-500" : "border-gray-600"
                     } bg-[#1A1E23] transition-all`}
@@ -319,7 +292,7 @@ export default function AssignmentForm() {
                       <p className="text-xs text-gray-400">PDF only (MAX. 15MB)</p>
                     </div>
                     <input
-                      id="file"
+                      id="cse-file"
                       type="file"
                       accept=".pdf"
                       className="hidden"
@@ -354,7 +327,7 @@ export default function AssignmentForm() {
                       Processing...
                     </div>
                   ) : (
-                    "Send Request"
+                    "Send Project Request"
                   )}
                 </button>
               </div>

@@ -3,6 +3,7 @@ import AssignmentForm from "@/components/AssignmentForm";
 import Separator from "@/components/Separator";
 import FAQ from "@/components/Faq";
 import JoinTeam from "@/components/JoinTeam";
+import CSEProjectAssistance from "@/components/CSEProjectAssistance";
 
 export default function Home() {
   return (
@@ -10,6 +11,8 @@ export default function Home() {
       <Hero />
       <Separator />
       <AssignmentForm />
+      <Separator />
+      <CSEProjectAssistance />
       <Separator />
       <FAQ />
       {/* <Separator />

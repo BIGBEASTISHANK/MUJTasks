@@ -1,6 +1,7 @@
 "use client";
+import { NavbarData } from "@@/data/NavbarData";
 import { motion } from "motion/react";
-import { FaGithub, FaInstagram, FaLinkedin } from "react-icons/fa";
+import { FooterComingSoonData, FooterSocialData } from "@@/data/FooterData";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -24,28 +25,17 @@ export default function Footer() {
               manuals to offer more services soon.
             </p>
             <div className="flex space-x-4 mt-4">
-              <a
-                href="https://github.com/BIGBEASTISHANK"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-[#1793D1] transition-colors"
-              >
-                <FaGithub size={20} />
-              </a>
-              <a
-                href="https://bigbeastishank.com/linkedin"
-                target="_blank"
-                className="text-gray-400 hover:text-[#1793D1] transition-colors"
-              >
-                <FaLinkedin size={20} />
-              </a>
-              <a
-                href="https://instagram.com/qt_patuti03"
-                target="_blank"
-                className="text-gray-400 hover:text-[#1793D1] transition-colors"
-              >
-                <FaInstagram size={20} />
-              </a>
+              {FooterSocialData.map((item, index) => (
+                <a
+                  href={item.href}
+                  key={index}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-400 hover:text-[#1793D1] transition-colors"
+                >
+                  <item.icon size={20} />
+                </a>
+              ))}
             </div>
           </div>
 
@@ -53,38 +43,16 @@ export default function Footer() {
           <div className="flex flex-col space-y-4">
             <h3 className="text-xl font-bold text-[#1793D1]">Quick Links</h3>
             <ul className="space-y-2 text-gray-300 text-sm">
-              <li>
-                <a
-                  href="#home"
-                  className="hover:text-[#1793D1] transition-colors"
-                >
-                  Home
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#form"
-                  className="hover:text-[#1793D1] transition-colors"
-                >
-                  Form
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#faq"
-                  className="hover:text-[#1793D1] transition-colors"
-                >
-                  FAQ
-                </a>
-              </li>
-              {/* <li>
-                <a
-                  href="#join"
-                  className="hover:text-[#1793D1] transition-colors"
-                >
-                  Join Team
-                </a>
-              </li> */}
+              {NavbarData.map((item) => (
+                <li key={item.name}>
+                  <a
+                    href={item.href}
+                    className="hover:text-[#1793D1] transition-colors"
+                  >
+                    {item.name}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -92,22 +60,12 @@ export default function Footer() {
           <div className="flex flex-col space-y-4">
             <h3 className="text-xl font-bold text-[#1793D1]">Coming Soon</h3>
             <ul className="space-y-2 text-gray-300 text-sm">
-              <li className="flex items-center">
-                <span className="w-2 h-2 bg-[#1793D1] rounded-full mr-2"></span>
-                Project Assistance
-              </li>
-              <li className="flex items-center">
-                <span className="w-2 h-2 bg-[#1793D1] rounded-full mr-2"></span>
-                Exam Preparation
-              </li>
-              <li className="flex items-center">
-                <span className="w-2 h-2 bg-[#1793D1] rounded-full mr-2"></span>
-                Research Paper Writing
-              </li>
-              <li className="flex items-center">
-                <span className="w-2 h-2 bg-[#1793D1] rounded-full mr-2"></span>
-                Technical Workshops
-              </li>
+              {FooterComingSoonData.map((item) => (
+                <li className="flex items-center" key={item.name}>
+                  <span className="w-2 h-2 bg-[#1793D1] rounded-full mr-2"></span>
+                  {item.name}
+                </li>
+              ))}
             </ul>
           </div>
         </motion.div>
