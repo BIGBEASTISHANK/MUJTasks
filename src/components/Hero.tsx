@@ -56,10 +56,10 @@ export default function Hero() {
               Assignment Form
             </ a>
             <a 
-              href="#faq" 
+              href="#cse-project" 
               className="bg-transparent hover:bg-white/10 hover:scale-[1.1] text-white border-2 border-[#1793D1] font-bold py-3 px-8 rounded-full transition-all duration-300"
             >
-              Check our FAQ
+              Project Assistance
             </a>
           </motion.div>
         </motion.div>
