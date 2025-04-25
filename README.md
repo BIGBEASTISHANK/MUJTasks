@@ -13,13 +13,31 @@ MUJ Tasks connects students who need help with their academic work to skilled wr
 
 - Mobile Responsive: Fully functional on all device sizes
 
-## Tech Stack
-- Framework: Next.js
+## Prerequisites
 
-- Styling: Tailwind CSS
+- Knowladge of Next.js
+- Knowladge of MongoDB
+- Knowladge of Google Cloud Console
 
-- Animations: Framers Motion
+## How to use
 
-- Icons: React Icons
+- Open [Google Cloud Console](https://console.cloud.google.com/) and create a new project.
+- Enable the Google Drive API and create a new service account.
+- Create a google drive and share it with the service account email as editor.
+- Download the service account key and fill data in the `.env.local` file.
+- In the drive link `drive.google.com/drive/u/1/folders/abc` abc is your `GDRIVE_SHARED_DRIVE_ID`
+- Create a mongodb database.
+- Get the mongodb uri and fill it in the `.env.local` file.
+- Run `yarn ; yarn dev` to install dependencies and run.
 
-- Typography: Geist Mono font
+## ENV Template
+```env
+GDRIVE_CLIENT_EMAIL="some@thing.iam.gserviceaccount.com"
+GDRIVE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n....\n-----END PRIVATE KEY-----"
+GDRIVE_SERVICE_ACCOUNT_CLIENT_ID="12345678990123456"
+
+ASSIGNMENTFORM_GDRIVE_SHARED_DRIVE_ID=""
+PROJECTASSISTANCE_GDRIVE_SHARED_DRIVE_ID=""
+
+MONGODB_URI="mongodb+src://somethingsomethihng/MUJTasks?retryWrites=true&w=majority&appName=ClusterName"
+```
