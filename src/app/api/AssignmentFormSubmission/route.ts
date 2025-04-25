@@ -5,7 +5,7 @@ import { Readable } from "stream";
 import { dbConnect } from "@/lib/db/mongoose";
 import AssignmentFormSubmission from "@/lib/models/AssignmentFormSubmission";
 
-export const maxDuration = 60; // Set max duration to 60 seconds for file uploads
+export const maxDuration = 60;
 
 export async function POST(req: Request) {
   try {
