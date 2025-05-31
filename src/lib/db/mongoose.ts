@@ -1,9 +1,10 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-const MONGODB_URI = process.env.MONGODB_URI as string;
+const MONGODB_URI: string = process.env.MONGODB_URI as string;
+const isDisabled: boolean = true;
 
 if (!MONGODB_URI) {
-  throw new Error('Please define the MONGODB_URI environment variable');
+  throw new Error("Please define the MONGODB_URI environment variable");
 }
 
 interface ConnectionCache {
@@ -15,7 +16,10 @@ declare global {
   var mongooseURI: ConnectionCache;
 }
 
-let cachedURI: ConnectionCache = global.mongooseURI || { conn: null, promise: null };
+let cachedURI: ConnectionCache = global.mongooseURI || {
+  conn: null,
+  promise: null,
+};
 
 if (!global.mongooseURI) {
   global.mongooseURI = { conn: null, promise: null };
@@ -26,7 +30,10 @@ export async function dbConnect(): Promise<typeof mongoose> {
   if (cachedURI.conn) return cachedURI.conn;
   if (!cachedURI.promise) {
     const opts = { bufferCommands: false };
-    cachedURI.promise = mongoose.connect(MONGODB_URI, opts);
+
+    !isDisabled
+      ? (cachedURI.promise = mongoose.connect(MONGODB_URI, opts))
+      : (cachedURI.promise = Promise.resolve(mongoose));
   }
   try {
     cachedURI.conn = await cachedURI.promise;

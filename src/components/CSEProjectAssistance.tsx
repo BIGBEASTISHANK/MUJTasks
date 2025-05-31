@@ -12,6 +12,8 @@ export default function CSEProjectAssistance() {
     deadline: "",
   });
 
+  const isDisabled: boolean = true;
+
   const [file, setFile] = useState<File | null>(null);
   const [fileError, setFileError] = useState("");
   const [mobileError, setMobileError] = useState("");
@@ -312,10 +314,10 @@ export default function CSEProjectAssistance() {
               {/* Submit Button */}
               <div className="flex justify-center mt-8">
                 <button
-                  type="submit"
-                  disabled={isSubmitting}
+                  type={isDisabled ? "button" : "submit"}
+                  disabled={isSubmitting || isDisabled}
                   className={`bg-[#1793D1] hover:bg-[#1793D1]/80 text-white font-bold py-3 px-10 rounded-full shadow-lg shadow-[#1793D1]/30 transition-all duration-300 ${
-                    isSubmitting ? "opacity-70 cursor-not-allowed" : ""
+                    isSubmitting || isDisabled ? "opacity-70 cursor-not-allowed" : "cursor-pointer"
                   }`}
                 >
                   {isSubmitting ? (
