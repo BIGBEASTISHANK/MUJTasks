@@ -4,25 +4,33 @@ import mime from "mime";
 import { Readable } from "stream";
 import { dbConnect } from "@/lib/db/mongoose";
 import AssignmentFormSubmission from "@/lib/models/AssignmentFormSubmission";
+import { isDisabled } from "@@/data/GlobalVar";
 
 export const maxDuration = 60;
 
 export async function POST(req: Request) {
   try {
     console.log("API route handler started");
-    
+
+    // Checking if is disabled
+    if (isDisabled)
+      return NextResponse.json(
+        { error: "API is disabled by owner" },
+        { status: 401 }
+      );
+
     // Connect to MongoDB
     await dbConnect();
     console.log("Connected to database");
 
     const formData = await req.formData();
     console.log("Form data received");
-    
+
     // Log received fields for debugging
     const formFields = Object.fromEntries(formData.entries());
     console.log("Form fields:", {
       ...formFields,
-      file: formData.get("file") ? "File received" : "No file received"
+      file: formData.get("file") ? "File received" : "No file received",
     });
 
     // Get form fields
@@ -35,26 +43,51 @@ export async function POST(req: Request) {
     const file = formData.get("file") as File;
 
     // Validate required fields
-    if (!name) return NextResponse.json({ error: "Name is required" }, { status: 400 });
-    if (!branch) return NextResponse.json({ error: "Branch is required" }, { status: 400 });
-    if (!mobile) return NextResponse.json({ error: "Mobile number is required" }, { status: 400 });
-    if (!estimatedPages) return NextResponse.json({ error: "Estimated pages is required" }, { status: 400 });
-    if (!subject) return NextResponse.json({ error: "Subject is required" }, { status: 400 });
-    if (!deadline) return NextResponse.json({ error: "Deadline is required" }, { status: 400 });
-    if (!file) return NextResponse.json({ error: "File is required" }, { status: 400 });
+    if (!name)
+      return NextResponse.json({ error: "Name is required" }, { status: 400 });
+    if (!branch)
+      return NextResponse.json(
+        { error: "Branch is required" },
+        { status: 400 }
+      );
+    if (!mobile)
+      return NextResponse.json(
+        { error: "Mobile number is required" },
+        { status: 400 }
+      );
+    if (!estimatedPages)
+      return NextResponse.json(
+        { error: "Estimated pages is required" },
+        { status: 400 }
+      );
+    if (!subject)
+      return NextResponse.json(
+        { error: "Subject is required" },
+        { status: 400 }
+      );
+    if (!deadline)
+      return NextResponse.json(
+        { error: "Deadline is required" },
+        { status: 400 }
+      );
+    if (!file)
+      return NextResponse.json({ error: "File is required" }, { status: 400 });
 
     // Get folder ID from environment variables
     const folderId = process.env.ASSIGNMENTFORM_GDRIVE_SHARED_DRIVE_ID;
     if (!folderId) {
       console.error("Google Drive folder ID not configured");
       return NextResponse.json(
-        { error: "Server configuration error: Google Drive folder ID not configured" },
+        {
+          error:
+            "Server configuration error: Google Drive folder ID not configured",
+        },
         { status: 500 }
       );
     }
 
     console.log("Uploading file to Google Drive");
-    
+
     // Upload file to Google Drive
     const fileLink = await uploadFileToDrive(folderId, file);
     console.log("File uploaded successfully:", fileLink);
@@ -88,7 +121,7 @@ export async function POST(req: Request) {
       {
         error: "Failed to process submission",
         details: error instanceof Error ? error.message : String(error),
-        stack: error instanceof Error ? error.stack : undefined
+        stack: error instanceof Error ? error.stack : undefined,
       },
       { status: 500 }
     );
@@ -97,14 +130,14 @@ export async function POST(req: Request) {
 
 // Google Drive authentication function
 const authenticateGoogle = () => {
-  const privateKey = process.env.GDRIVE_PRIVATE_KEY?.replace(/\\n/g, '\n');
+  const privateKey = process.env.GDRIVE_PRIVATE_KEY?.replace(/\\n/g, "\n");
   const clientEmail = process.env.GDRIVE_CLIENT_EMAIL;
   const serviceAccountClientId = process.env.GDRIVE_SERVICE_ACCOUNT_CLIENT_ID;
 
   if (!privateKey || !clientEmail || !serviceAccountClientId) {
     throw new Error("Missing Google Drive API credentials");
   }
-  
+
   const auth = new google.auth.GoogleAuth({
     credentials: {
       type: "service_account",
@@ -126,8 +159,8 @@ const uploadFileToDrive = async (folderId: string, file: File) => {
   // Convert File to buffer
   const arrayBuffer = await file.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
-  
-  const mimeType = file.type || mime.getType(file.name) || 'application/pdf';
+
+  const mimeType = file.type || mime.getType(file.name) || "application/pdf";
 
   const fileMetadata = {
     name: file.name,
@@ -137,7 +170,7 @@ const uploadFileToDrive = async (folderId: string, file: File) => {
   console.log("Creating file in Google Drive:", {
     fileName: file.name,
     mimeType,
-    folderId
+    folderId,
   });
 
   const response = await drive.files.create({

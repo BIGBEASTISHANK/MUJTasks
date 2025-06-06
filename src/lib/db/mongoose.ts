@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
+import { isDisabled } from "@@/data/GlobalVar";
 
 const MONGODB_URI: string = process.env.MONGODB_URI as string;
-const isDisabled: boolean = true;
 
 if (!MONGODB_URI) {
   throw new Error("Please define the MONGODB_URI environment variable");

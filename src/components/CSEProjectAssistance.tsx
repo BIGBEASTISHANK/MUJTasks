@@ -1,6 +1,7 @@
 "use client";
 import { useState, ChangeEvent, FormEvent } from "react";
 import { motion } from "framer-motion";
+import { isDisabled } from "@@/data/GlobalVar";
 
 export default function CSEProjectAssistance() {
   const [formData, setFormData] = useState({
@@ -11,8 +12,6 @@ export default function CSEProjectAssistance() {
     projectType: "",
     deadline: "",
   });
-
-  const isDisabled: boolean = true;
 
   const [file, setFile] = useState<File | null>(null);
   const [fileError, setFileError] = useState("");
