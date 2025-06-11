@@ -16,7 +16,7 @@ export const FooterSocialData: { icon: IconType; href: string }[] = [
   },
   {
     icon: FaLinkedin,
-    href: "https://linkedin.com/in/ishank-paturi",
+    href: "https://linkedin.com/in/bigbeastishank",
   },
 ];
 
