@@ -1,9 +1,9 @@
-import Hero from "@/components/Hero";
-import AssignmentForm from "@/components/AssignmentForm";
-import Separator from "@/components/Separator";
-import FAQ from "@/components/Faq";
-import JoinTeam from "@/components/JoinTeam";
-import CSEProjectAssistance from "@/components/CSEProjectAssistance";
+import Hero from "@/Components/Home/Hero";
+import AssignmentForm from "@/Components/Home/AssignmentForm";
+import Separator from "@/Utility/Separator";
+import FAQ from "@/Components/Home/Faq";
+import JoinTeam from "@/Components/Home/JoinTeam";
+import CSEProjectAssistance from "@/Components/Home/CSEProjectAssistance";
 
 export default function Home() {
   return (
