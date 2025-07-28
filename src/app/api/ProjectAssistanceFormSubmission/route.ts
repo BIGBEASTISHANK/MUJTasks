@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { google } from "googleapis";
 import mime from "mime";
 import { Readable } from "stream";
@@ -157,3 +157,50 @@ const uploadFileToDrive = async (folderId: string, file: File) => {
 
   return fileLink.data;
 };
+
+export async function GET(req: NextRequest) {
+  try {
+    // Verify employee authentication
+    const cookies = req.cookies.toString();
+
+    const verifyResponse = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/verifyEmployee`,
+      {
+        method: "GET",
+        headers: {
+          Cookie: cookies,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!verifyResponse.ok) {
+      const errorData = await verifyResponse.json();
+      return NextResponse.json(
+        { error: errorData.error },
+        { status: errorData.status }
+      );
+    }
+
+    // Connect to database
+    await dbConnect();
+
+    // Fetch submissions
+    const submissions = await ProjectAssistanceFormSubmission.find();
+
+    if (!submissions)
+      return NextResponse.json(
+        { error: "No submissions found" },
+        { status: 404 }
+      );
+
+    // Returning submission
+    return NextResponse.json({ submissions: submissions }, { status: 200 });
+  } catch (error) {
+    console.error("API Error:", error);
+    return NextResponse.json(
+      { error: "Something went wrong" },
+      { status: 500 }
+    );
+  }
+}

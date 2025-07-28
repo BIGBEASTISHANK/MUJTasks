@@ -31,6 +31,26 @@ const AssignmentFormSubmissionSchema = new mongoose.Schema(
       type: String,
       required: [true, "File link is required"],
     },
+    assignedTo: {
+      type: String,
+    },
+    status: {
+      type: String,
+      required: [true, "Status is required"],
+      enum: ["pending", "completed", "accepted"],
+      default: "pending",
+    },
+    assignedToId: {
+      type: String,
+    },
+    acceptedOn: {
+      type: Date,
+      default: null,
+    },
+    completedOn: {
+      type: Date,
+      default: null,
+    },
   },
   {
     timestamps: true,
