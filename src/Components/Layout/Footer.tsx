@@ -7,7 +7,7 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-[#1A1E23] border-t border-[#1793D1]/30 pt-10 pb-6">
+    <footer className="bg-[#1A1E23] border-t border-[#1793D1]/30 mt-10 pt-10 pb-6">
       <div className="max-w-7xl mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

@@ -2,9 +2,17 @@
 import { motion } from "framer-motion";
 import { MdSecurity } from "react-icons/md";
 
-export default function VerifyingDB() {
+export default function VerifyingDB({
+  headerText = "Verifying Access",
+  subHeaderText = "Please wait while we authenticate your session...",
+  fullScreen = true,
+}: any) {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#1A1E23] to-[#232930] px-2">
+    <div
+      className={`${
+        fullScreen ? "min-h-screen" : "py-5"
+      } flex items-center justify-center bg-gradient-to-br from-[#1A1E23] to-[#232930] px-2`}
+    >
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -26,7 +34,7 @@ export default function VerifyingDB() {
           transition={{ delay: 0.2 }}
           className="text-2xl font-bold text-white mb-3"
         >
-          Verifying Access
+          {headerText}
         </motion.h2>
 
         <motion.p
@@ -35,7 +43,7 @@ export default function VerifyingDB() {
           transition={{ delay: 0.4 }}
           className="text-gray-400 mb-6"
         >
-          Please wait while we authenticate your session...
+          {subHeaderText}
         </motion.p>
 
         {/* Loading Dots */}

@@ -47,7 +47,7 @@ export async function GET(req: NextRequest) {
     // Check if employee exists
     if (!employeeDetails) {
       return NextResponse.json(
-        { error: "User not found" },
+        { error: "Employee not found" },
         { status: 401 }
       );
     }
@@ -57,11 +57,12 @@ export async function GET(req: NextRequest) {
       {
         success: true,
         message: "Admin verified successfully",
-        user: {
-          id: employeeDetails._id,
+        employeeData: {
+          _id: employeeDetails._id,
           email: employeeDetails.email,
           name: employeeDetails.name,
-          role: employeeDetails.role,
+          mobile: employeeDetails.mobile,
+          task: employeeDetails.task,
         },
       },
       { status: 200 }
