@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export default function Navbar() {
   return (
-    <div className="fixed flex w-full p-4 z-10">
+    <div className="fixed flex w-full p-4 z-10 select-none">
       <motion.div
         initial={{ y: -150 }}
         animate={{ y: 0 }}

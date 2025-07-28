@@ -12,7 +12,7 @@ export default function AssignmentForm() {
     subject: "",
     deadline: "",
   });
-  
+
   const [file, setFile] = useState<File | null>(null);
   const [fileError, setFileError] = useState("");
   const [mobileError, setMobileError] = useState("");
@@ -22,18 +22,18 @@ export default function AssignmentForm() {
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    
+
     if (name === "mobile") {
       // Only allow digits
       const digitsOnly = value.replace(/\D/g, "");
-      
+
       // Validate mobile number length
       if (digitsOnly.length > 0 && digitsOnly.length !== 10) {
         setMobileError("Mobile number must be exactly 10 digits");
       } else {
         setMobileError("");
       }
-      
+
       setFormData({ ...formData, [name]: digitsOnly });
     } else {
       setFormData({ ...formData, [name]: value });
@@ -42,7 +42,7 @@ export default function AssignmentForm() {
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
-    
+
     if (selectedFile) {
       // Check file size (15MB = 15 * 1024 * 1024 bytes)
       if (selectedFile.size > 15 * 1024 * 1024) {
@@ -60,22 +60,22 @@ export default function AssignmentForm() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    
+
     // Validate mobile number
     if (formData.mobile.length !== 10) {
       setMobileError("Mobile number must be exactly 10 digits");
       return;
     }
-    
+
     // Validate file
     if (!file) {
       setFileError("Please upload your assignment or lab manual PDF");
       return;
     }
-    
+
     setIsSubmitting(true);
     setSubmitError("");
-    
+
     try {
       // Create FormData object for file upload
       const submitData = new FormData();
@@ -86,7 +86,7 @@ export default function AssignmentForm() {
       submitData.append("subject", formData.subject);
       submitData.append("deadline", formData.deadline);
       submitData.append("file", file);
-      
+
       // Log the data being sent for debugging
       console.log("Submitting form with data:", {
         name: formData.name,
@@ -96,27 +96,29 @@ export default function AssignmentForm() {
         subject: formData.subject,
         deadline: formData.deadline,
         fileName: file.name,
-        fileSize: file.size
+        fileSize: file.size,
       });
-      
+
       // Send data to API endpoint
       const response = await fetch("/api/AssignmentFormSubmission", {
         method: "POST",
         body: submitData,
       });
-      
+
       // Log the response status for debugging
       console.log("Response status:", response.status);
-      
+
       const result = await response.json();
       console.log("Response data:", result);
-      
+
       if (!response.ok) {
-        throw new Error(result.error || result.details || "Failed to submit form");
+        throw new Error(
+          result.error || result.details || "Failed to submit form"
+        );
       }
-      
+
       setSubmitSuccess(true);
-      
+
       // Reset form after 3 seconds
       setTimeout(() => {
         setFormData({
@@ -130,10 +132,11 @@ export default function AssignmentForm() {
         setFile(null);
         setSubmitSuccess(false);
       }, 10000);
-      
     } catch (error) {
       console.error("Error submitting form:", error);
-      setSubmitError(error instanceof Error ? error.message : "Failed to submit form");
+      setSubmitError(
+        error instanceof Error ? error.message : "Failed to submit form"
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -153,7 +156,8 @@ export default function AssignmentForm() {
             <span className="text-[#1793D1]">Assignment</span> Form
           </h2>
           <p className="text-lg text-gray-300 max-w-2xl mx-auto">
-            Fill out the form below with your assignment/labmanual details and we'll get back to you with a quote.
+            Fill out the form below with your assignment/labmanual details and
+            we'll get back to you with a quote.
           </p>
         </motion.div>
 
@@ -167,8 +171,12 @@ export default function AssignmentForm() {
           {submitSuccess ? (
             <div className="text-center py-10">
               <div className="text-[#1793D1] text-6xl mb-4">✓</div>
-              <h3 className="text-2xl font-bold text-white mb-2">Request Submitted!</h3>
-              <p className="text-gray-300">We'll contact you shortly to discuss your assignment.</p>
+              <h3 className="text-2xl font-bold text-white mb-2">
+                Request Submitted!
+              </h3>
+              <p className="text-gray-300">
+                We'll contact you shortly to discuss your assignment.
+              </p>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -177,11 +185,14 @@ export default function AssignmentForm() {
                   {submitError}
                 </div>
               )}
-              
+
               <div className="grid md:grid-cols-2 gap-6">
                 {/* Name Field */}
                 <div>
-                  <label htmlFor="name" className="block text-gray-200 mb-2 font-medium">
+                  <label
+                    htmlFor="name"
+                    className="block text-gray-200 mb-2 font-medium"
+                  >
                     Full Name
                   </label>
                   <input
@@ -198,7 +209,10 @@ export default function AssignmentForm() {
 
                 {/* Branch Field */}
                 <div>
-                  <label htmlFor="branch" className="block text-gray-200 mb-2 font-medium">
+                  <label
+                    htmlFor="branch"
+                    className="block text-gray-200 mb-2 font-medium"
+                  >
                     Branch
                   </label>
                   <input
@@ -215,7 +229,10 @@ export default function AssignmentForm() {
 
                 {/* Mobile Number Field */}
                 <div>
-                  <label htmlFor="mobile" className="block text-gray-200 mb-2 font-medium">
+                  <label
+                    htmlFor="mobile"
+                    className="block text-gray-200 mb-2 font-medium"
+                  >
                     Mobile Number
                   </label>
                   <input
@@ -231,12 +248,17 @@ export default function AssignmentForm() {
                     } rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-[#1793D1] transition-all`}
                     placeholder="10-digit mobile number"
                   />
-                  {mobileError && <p className="text-red-500 text-sm mt-1">{mobileError}</p>}
+                  {mobileError && (
+                    <p className="text-red-500 text-sm mt-1">{mobileError}</p>
+                  )}
                 </div>
 
                 {/* Estimated Pages Field */}
                 <div>
-                  <label htmlFor="estimatedPages" className="block text-gray-200 mb-2 font-medium">
+                  <label
+                    htmlFor="estimatedPages"
+                    className="block text-gray-200 mb-2 font-medium"
+                  >
                     Estimated Pages
                   </label>
                   <input
@@ -254,7 +276,10 @@ export default function AssignmentForm() {
 
                 {/* Subject Field */}
                 <div>
-                  <label htmlFor="subject" className="block text-gray-200 mb-2 font-medium">
+                  <label
+                    htmlFor="subject"
+                    className="block text-gray-200 mb-2 font-medium"
+                  >
                     Subject
                   </label>
                   <input
@@ -271,7 +296,10 @@ export default function AssignmentForm() {
 
                 {/* Time to Complete Field */}
                 <div>
-                  <label htmlFor="deadline" className="block text-gray-200 mb-2 font-medium">
+                  <label
+                    htmlFor="deadline"
+                    className="block text-gray-200 mb-2 font-medium"
+                  >
                     Deadline
                   </label>
                   <input
@@ -281,7 +309,7 @@ export default function AssignmentForm() {
                     value={formData.deadline}
                     onChange={handleInputChange}
                     required
-                    min={new Date().toISOString().split('T')[0]}
+                    min={new Date().toISOString().split("T")[0]}
                     className="w-full bg-[#1A1E23] border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-[#1793D1] transition-all"
                   />
                 </div>
@@ -289,7 +317,10 @@ export default function AssignmentForm() {
 
               {/* File Upload Field */}
               <div>
-                <label htmlFor="file" className="block text-gray-200 mb-2 font-medium">
+                <label
+                  htmlFor="file"
+                  className="block text-gray-200 mb-2 font-medium"
+                >
                   Upload Assignment/Lab Manual (PDF, max 15MB)
                 </label>
                 <div className="flex items-center justify-center w-full">
@@ -315,9 +346,12 @@ export default function AssignmentForm() {
                         ></path>
                       </svg>
                       <p className="mb-2 text-sm text-gray-400">
-                        <span className="font-semibold">Click to upload</span> or drag and drop
+                        <span className="font-semibold">Click to upload</span>{" "}
+                        or drag and drop
                       </p>
-                      <p className="text-xs text-gray-400">PDF only (MAX. 15MB)</p>
+                      <p className="text-xs text-gray-400">
+                        PDF only (MAX. 15MB)
+                      </p>
                     </div>
                     <input
                       id="file"
@@ -329,10 +363,13 @@ export default function AssignmentForm() {
                     />
                   </label>
                 </div>
-                {fileError && <p className="text-red-500 text-sm mt-1">{fileError}</p>}
+                {fileError && (
+                  <p className="text-red-500 text-sm mt-1">{fileError}</p>
+                )}
                 {file && (
                   <p className="text-green-400 text-sm mt-2">
-                    File selected: {file.name} ({(file.size / (1024 * 1024)).toFixed(2)} MB)
+                    File selected: {file.name} (
+                    {(file.size / (1024 * 1024)).toFixed(2)} MB)
                   </p>
                 )}
               </div>
@@ -343,14 +380,32 @@ export default function AssignmentForm() {
                   type={isDisabled ? "button" : "submit"}
                   disabled={isSubmitting || isDisabled}
                   className={`bg-[#1793D1] hover:bg-[#1793D1]/80 text-white font-bold py-3 px-10 rounded-full shadow-lg shadow-[#1793D1]/30 transition-all duration-300 ${
-                    isSubmitting || isDisabled ? "opacity-70 cursor-not-allowed" : "cursor-pointer"
+                    isSubmitting || isDisabled
+                      ? "opacity-70 cursor-not-allowed"
+                      : "cursor-pointer"
                   }`}
                 >
                   {isSubmitting ? (
                     <div className="flex items-center">
-                      <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      <svg
+                        className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
                       </svg>
                       Processing...
                     </div>
