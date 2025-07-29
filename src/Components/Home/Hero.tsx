@@ -1,4 +1,5 @@
 "use client";
+import { isDisabled } from "@@/data/GlobalVar";
 import { motion } from "motion/react";
 import Marquee from "react-fast-marquee";
 
@@ -8,8 +9,10 @@ export default function Hero() {
       id="home"
       className="min-h-screen flex flex-col items-center justify-center pt-20 px-4"
     >
-      {/* Scrolling text*/}
-      <div className="w-full mb-20 overflow-hidden">
+      {/* Website is disables text*/}
+      <div
+        className={`w-full mb-20 overflow-hidden ${isDisabled ? "" : "hidden"}`}
+      >
         <Marquee
           gradient={true}
           speed={50}
