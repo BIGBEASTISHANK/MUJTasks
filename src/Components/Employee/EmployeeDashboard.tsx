@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { GetTaskDisplayName } from "@/Utility/TaskTypes";
 import VerifyingDB from "@/Utility/VerifyingDB";
 
-export default function AdminDashboardComponent() {
+export default function EmployeeDashboardComponent() {
+  // variables
   const router = useRouter();
   const [isVerifying, setIsVerifying] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -24,16 +25,17 @@ export default function AdminDashboardComponent() {
     tasks: [],
   });
 
+  // Dynamic api
   const availableTabs = [
-    { id: 1, apiEndpoint: "/api/AssignmentFormSubmission/" },
-    { id: 2, apiEndpoint: "/api/ProjectsSubmission/" },
+    { id: 1, apiEndpoint: "/api/AssignmentFormSubmission" },
+    { id: 2, apiEndpoint: "/api/ProjectsSubmission" },
   ];
 
-  // Show only tabs assigned to current employee
   const visibleTabs = availableTabs.filter((tab) =>
     employeeData.tasks.includes(tab.id)
   );
 
+  // logout function
   const handleLogout = async () => {
     setIsVerifying(true);
     try {
@@ -44,11 +46,11 @@ export default function AdminDashboardComponent() {
     } catch (error) {
       console.error("Logout failed:", error);
     }
-    router.push("/admin");
+    router.push("/employee");
   };
 
-  // Verify employee authentication and fetch data on mount
   useEffect(() => {
+    // verify employee authentication and fetch data on mount
     async function verifyEmployee() {
       try {
         const response = await fetch("/api/auth/verifyEmployee", {
@@ -57,11 +59,11 @@ export default function AdminDashboardComponent() {
         });
 
         if (!response.ok) {
-          router.push("/admin");
+          router.push("/employee");
           return;
         }
 
-        const data = await response.json();
+        const data = await response.json(); // Getting response
 
         setEmployeeData({
           id: data.employeeData._id,
@@ -71,15 +73,13 @@ export default function AdminDashboardComponent() {
           tasks: data.employeeData.task,
         });
 
-        // Set first assigned task as default active tab
-        if (data.employeeData.task?.length > 0) {
+        if (data.employeeData.task?.length > 0)
           setActiveTab(data.employeeData.task[0]);
-        }
 
         setIsAuthenticated(true);
       } catch (error) {
         console.error("Verification failed:", error);
-        router.push("/admin");
+        router.push("/employee");
       } finally {
         setIsVerifying(false);
       }
@@ -88,6 +88,7 @@ export default function AdminDashboardComponent() {
     verifyEmployee();
   }, [router]);
 
+  // Verification loading screen
   if (isVerifying || !isAuthenticated) {
     return <VerifyingDB />;
   }
@@ -95,16 +96,17 @@ export default function AdminDashboardComponent() {
   return (
     <div className="pt-20 sm:pt-28 min-h-screen px-2 sm:px-4">
       <div className="max-w-7xl mx-auto">
-        {/* Mobile-first responsive grid - Employee details first on mobile */}
         <div className="grid grid-cols-1 xl:grid-cols-4 gap-4 lg:gap-6">
-          {/* Employee Details - Shows first on mobile (order-1), sidebar on desktop */}
           <div className="xl:col-span-1 order-1">
+            {/* Employee Details section */}
             <div className="xl:sticky xl:top-32 bg-[#232930] rounded-xl p-4 sm:p-6">
+              {/* Header */}
               <h2 className="text-base sm:text-lg font-bold text-[#1793D1] mb-4 text-center select-none">
                 Employee Details
               </h2>
 
               <div className="space-y-3 text-sm">
+                {/* Employee Id */}
                 <div className="border-b border-gray-700 pb-2">
                   <span className="text-gray-400 text-xs select-none">ID</span>
                   <p className="text-white font-medium text-xs sm:text-sm break-all">
@@ -112,6 +114,7 @@ export default function AdminDashboardComponent() {
                   </p>
                 </div>
 
+                {/* Employee Name */}
                 <div className="border-b border-gray-700 pb-2">
                   <span className="text-gray-400 text-xs select-none">
                     Name
@@ -121,6 +124,7 @@ export default function AdminDashboardComponent() {
                   </p>
                 </div>
 
+                {/* Employee Email */}
                 <div className="border-b border-gray-700 pb-2">
                   <span className="text-gray-400 text-xs select-none">
                     Email
@@ -130,6 +134,7 @@ export default function AdminDashboardComponent() {
                   </p>
                 </div>
 
+                {/* Employee Mobile */}
                 <div className="border-b border-gray-700 pb-2">
                   <span className="text-gray-400 text-xs select-none">
                     Mobile
@@ -139,10 +144,14 @@ export default function AdminDashboardComponent() {
                   </p>
                 </div>
 
+                {/* Employee Assigned Tasks */}
                 <div className="mb-4">
+                  {/* Title */}
                   <span className="text-gray-400 text-xs select-none">
                     Assigned Tasks
                   </span>
+
+                  {/* Tasks */}
                   <div className="flex flex-wrap gap-1 mt-1 select-none">
                     {employeeData.tasks?.length > 0 ? (
                       employeeData.tasks.map((taskNumber, index) => (
@@ -162,6 +171,7 @@ export default function AdminDashboardComponent() {
                 </div>
               </div>
 
+              {/* Logout Button */}
               <div className="mt-6 pt-4 border-t border-gray-700">
                 <button
                   onClick={handleLogout}
@@ -173,9 +183,8 @@ export default function AdminDashboardComponent() {
             </div>
           </div>
 
-          {/* Main Content - Shows second on mobile (order-2), main area on desktop */}
+          {/* Tasks tab selector */}
           <div className="xl:col-span-3 order-2">
-            {/* Tab Navigation - Scrollable on mobile */}
             {visibleTabs.length > 0 && (
               <div className="mb-4 sm:mb-6">
                 <div className="bg-[#232930] p-1 rounded-lg w-full overflow-x-auto">
@@ -198,7 +207,7 @@ export default function AdminDashboardComponent() {
               </div>
             )}
 
-            {/* Content Area */}
+            {/* Task content section */}
             <div className="bg-[#232930] rounded-xl p-4 sm:p-6">
               {visibleTabs.length > 0 ? (
                 <ContentSection
@@ -221,20 +230,25 @@ export default function AdminDashboardComponent() {
   );
 }
 
-// ContentSection remains the same...
+// Content section function
 function ContentSection({ activeTab, apiEndpoint, employeeId }: any) {
+  // Variables
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [statusFilter, setStatusFilter] = useState<
     "pending" | "accepted" | "completed"
   >("pending");
+  const [actionLoading, setActionLoading] = useState<{
+    [key: string]: boolean;
+  }>({});
 
-  // Fetch submissions data from API
+  // Fetching data from db
   const fetchData = async () => {
     if (!apiEndpoint) return;
 
     setLoading(true);
     try {
+      // Calling api
       const response = await fetch(apiEndpoint, {
         method: "GET",
         credentials: "include",
@@ -251,17 +265,20 @@ function ContentSection({ activeTab, apiEndpoint, employeeId }: any) {
     }
   };
 
+  // Change Data on tab change
   useEffect(() => {
     setData(null);
     fetchData();
   }, [activeTab, apiEndpoint]);
 
+  // Refresh handling
   const handleRefresh = () => {
     fetchData();
   };
 
-  // Accept pending submission and assign to current employee
+  // Accept submission handling
   const handleAcceptSubmission = async (submissionId: string) => {
+    setActionLoading((prev) => ({ ...prev, [submissionId]: true }));
     try {
       const response = await fetch(`/api/SubmissionStatusUpdate`, {
         method: "PUT",
@@ -284,11 +301,14 @@ function ContentSection({ activeTab, apiEndpoint, employeeId }: any) {
       }
     } catch (error) {
       console.log("Failed to accept submission:", error);
+    } finally {
+      setActionLoading((prev) => ({ ...prev, [submissionId]: false }));
     }
   };
 
-  // Mark accepted submission as completed
+  // Mark as completed handling
   const handleMarkAsCompleted = async (submissionId: string) => {
+    setActionLoading((prev) => ({ ...prev, [submissionId]: true }));
     try {
       const response = await fetch(`/api/SubmissionStatusUpdate`, {
         method: "PUT",
@@ -311,9 +331,12 @@ function ContentSection({ activeTab, apiEndpoint, employeeId }: any) {
       }
     } catch (error) {
       console.log("Failed to mark as completed:", error);
+    } finally {
+      setActionLoading((prev) => ({ ...prev, [submissionId]: false }));
     }
   };
 
+  // Format date
   const formatDate = (dateString: string) => {
     if (!dateString) return "N/A";
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -325,6 +348,7 @@ function ContentSection({ activeTab, apiEndpoint, employeeId }: any) {
     });
   };
 
+  // Get status color
   const getStatusColor = (status: string) => {
     switch (status?.toLowerCase()) {
       case "completed":
@@ -338,7 +362,7 @@ function ContentSection({ activeTab, apiEndpoint, employeeId }: any) {
     }
   };
 
-  // Filter submissions by status and sort by creation date
+  // Filter submissions
   const getFilteredSubmissions = () => {
     if (!data?.submissions) return [];
 
@@ -358,7 +382,6 @@ function ContentSection({ activeTab, apiEndpoint, employeeId }: any) {
       );
     }
 
-    // Sort by latest first
     filtered.sort(
       (a, b) =>
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
@@ -367,7 +390,7 @@ function ContentSection({ activeTab, apiEndpoint, employeeId }: any) {
     return filtered;
   };
 
-  // Determine button type and text based on submission status and assignment
+  // Get action button type and text
   const getButtonAction = (submission: any) => {
     const status = submission.status?.toLowerCase();
     const isAssignedToCurrentEmployee = submission.assignedToId === employeeId;
@@ -387,20 +410,24 @@ function ContentSection({ activeTab, apiEndpoint, employeeId }: any) {
     }
   };
 
+  // Filtered submissions
   const filteredSubmissions = getFilteredSubmissions();
 
   return (
     <div>
-      {/* Header with title and refresh - Stack on mobile */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6 gap-3 sm:gap-0">
+        {/* Heading */}
         <h3 className="text-lg sm:text-xl font-bold text-white select-none">
           {GetTaskDisplayName(activeTab)} Management
         </h3>
+
+        {/* Refresh button */}
         <button
           onClick={handleRefresh}
           disabled={loading}
           className="flex items-center gap-2 bg-[#1793D1] hover:bg-[#1793D1]/80 disabled:bg-[#1793D1]/50 disabled:cursor-not-allowed text-white text-xs sm:text-sm font-medium py-2 px-3 sm:px-4 rounded-lg transition-all duration-200 select-none cursor-pointer"
         >
+          {/* Spin button */}
           <svg
             className={`w-3 h-3 sm:w-4 sm:h-4 ${loading ? "animate-spin" : ""}`}
             fill="none"
@@ -418,7 +445,9 @@ function ContentSection({ activeTab, apiEndpoint, employeeId }: any) {
         </button>
       </div>
 
+      {/* Loading screen && Content type selection */}
       {loading ? (
+        // Loading screen
         <VerifyingDB
           headerText="Fetching Data & Verifying Access"
           subHeaderText={`Please wait while we fetch ${GetTaskDisplayName(
@@ -427,13 +456,14 @@ function ContentSection({ activeTab, apiEndpoint, employeeId }: any) {
           fullScreen={false}
         />
       ) : (
+        // Content type selection
         <div className="space-y-4">
           {data?.submissions?.length > 0 ? (
             <>
-              {/* Status Filter Tabs - Scrollable on mobile */}
               <div className="mb-4 sm:mb-6">
                 <div className="bg-[#1A1E23] p-1 rounded-lg w-full overflow-x-auto">
                   <div className="flex space-x-1 min-w-max">
+                    {/* Pending */}
                     <button
                       onClick={() => setStatusFilter("pending")}
                       className={`px-3 sm:px-4 py-2 rounded-md text-xs sm:text-sm font-medium transition-all duration-200 select-none cursor-pointer whitespace-nowrap ${
@@ -450,6 +480,8 @@ function ContentSection({ activeTab, apiEndpoint, employeeId }: any) {
                       }
                       )
                     </button>
+
+                    {/* Accepted */}
                     <button
                       onClick={() => setStatusFilter("accepted")}
                       className={`px-3 sm:px-4 py-2 rounded-md text-xs sm:text-sm font-medium transition-all duration-200 select-none cursor-pointer whitespace-nowrap ${
@@ -466,6 +498,8 @@ function ContentSection({ activeTab, apiEndpoint, employeeId }: any) {
                       }
                       )
                     </button>
+
+                    {/* Completed */}
                     <button
                       onClick={() => setStatusFilter("completed")}
                       className={`px-3 sm:px-4 py-2 rounded-md text-xs sm:text-sm font-medium transition-all duration-200 select-none cursor-pointer whitespace-nowrap ${
@@ -486,7 +520,7 @@ function ContentSection({ activeTab, apiEndpoint, employeeId }: any) {
                 </div>
               </div>
 
-              {/* Submissions Cards - Single column on mobile, two on larger screens */}
+              {/* Cards */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
                 {filteredSubmissions.length > 0 ? (
                   filteredSubmissions.map((submission: any) => (
@@ -494,16 +528,20 @@ function ContentSection({ activeTab, apiEndpoint, employeeId }: any) {
                       key={submission._id}
                       className="bg-[#1A1E23] p-4 sm:p-6 rounded-lg border border-gray-700 hover:border-[#1793D1]/50 transition-all duration-200"
                     >
-                      {/* Header - Stack on very small screens */}
                       <div className="flex flex-col xs:flex-row justify-between items-start mb-4 gap-2 xs:gap-0">
                         <div className="flex-1 min-w-0">
+                          {/* Client name */}
                           <h4 className="text-base sm:text-lg font-semibold text-white mb-1 break-words">
                             {submission.name}
                           </h4>
+
+                          {/* Client Branch */}
                           <p className="text-xs sm:text-sm text-gray-400">
                             {submission.branch} Branch
                           </p>
                         </div>
+
+                        {/* Submission status */}
                         <span
                           className={`px-2 sm:px-3 py-1 rounded-full text-xs font-medium shrink-0 ${getStatusColor(
                             submission.status
@@ -514,9 +552,9 @@ function ContentSection({ activeTab, apiEndpoint, employeeId }: any) {
                         </span>
                       </div>
 
-                      {/* Details Grid - Single column on very small screens */}
                       <div className="space-y-3">
                         <div className="grid grid-cols-1 xs:grid-cols-2 gap-3 sm:gap-4">
+                          {/* Subject || Project title */}
                           <div className="min-w-0">
                             <span className="text-xs text-gray-400 select-none block mb-1">
                               {activeTab === 1 ? "Subject" : "Project Title"}
@@ -525,6 +563,8 @@ function ContentSection({ activeTab, apiEndpoint, employeeId }: any) {
                               {submission.subject || submission.projectTitle}
                             </p>
                           </div>
+
+                          {/* Pages || Project type */}
                           <div>
                             <span className="text-xs text-gray-400 select-none block mb-1">
                               {activeTab === 1 ? "Pages" : "Project Type"}
@@ -536,6 +576,7 @@ function ContentSection({ activeTab, apiEndpoint, employeeId }: any) {
                           </div>
                         </div>
 
+                        {/* Mobile */}
                         <div className="grid grid-cols-1 xs:grid-cols-2 gap-3 sm:gap-4">
                           <div>
                             <span className="text-xs text-gray-400 select-none block mb-1">
@@ -545,6 +586,8 @@ function ContentSection({ activeTab, apiEndpoint, employeeId }: any) {
                               {submission.mobile}
                             </p>
                           </div>
+
+                          {/* Deadline */}
                           <div>
                             <span className="text-xs text-gray-400 select-none block mb-1">
                               Deadline
@@ -555,6 +598,7 @@ function ContentSection({ activeTab, apiEndpoint, employeeId }: any) {
                           </div>
                         </div>
 
+                        {/* Assigned to */}
                         {submission.assignedTo && (
                           <div>
                             <span className="text-xs text-gray-400 select-none block mb-1">
@@ -566,6 +610,7 @@ function ContentSection({ activeTab, apiEndpoint, employeeId }: any) {
                           </div>
                         )}
 
+                        {/* Submitted on */}
                         <div>
                           <span className="text-xs text-gray-400 select-none block mb-1">
                             Submitted On
@@ -575,6 +620,7 @@ function ContentSection({ activeTab, apiEndpoint, employeeId }: any) {
                           </p>
                         </div>
 
+                        {/* Accepted on */}
                         {submission.acceptedOn && (
                           <div>
                             <span className="text-xs text-gray-400 select-none block mb-1">
@@ -586,6 +632,7 @@ function ContentSection({ activeTab, apiEndpoint, employeeId }: any) {
                           </div>
                         )}
 
+                        {/* Completed on */}
                         {submission.completedOn && (
                           <div>
                             <span className="text-xs text-gray-400 select-none block mb-1">
@@ -598,7 +645,7 @@ function ContentSection({ activeTab, apiEndpoint, employeeId }: any) {
                         )}
                       </div>
 
-                      {/* Actions - Stack on mobile */}
+                      {/* View file button */}
                       <div className="mt-4 pt-4 border-t border-gray-700 flex flex-col xs:flex-row gap-2">
                         {submission.fileLink && (
                           <a
@@ -610,10 +657,11 @@ function ContentSection({ activeTab, apiEndpoint, employeeId }: any) {
                             View File
                           </a>
                         )}
-
                         {(() => {
                           const buttonAction = getButtonAction(submission);
+                          const isLoading = actionLoading[submission._id];
 
+                          // Disabled button
                           if (buttonAction.disabled) {
                             return (
                               <button
@@ -625,28 +673,64 @@ function ContentSection({ activeTab, apiEndpoint, employeeId }: any) {
                             );
                           }
 
+                          // Accept button
                           if (buttonAction.type === "accept") {
                             return (
                               <button
                                 onClick={() =>
                                   handleAcceptSubmission(submission._id)
                                 }
-                                className="flex-1 bg-green-600 hover:bg-green-500 text-white text-xs sm:text-sm font-medium py-2 px-3 sm:px-4 rounded-lg transition-all duration-200 select-none cursor-pointer"
+                                disabled={isLoading}
+                                className="flex-1 bg-green-600 hover:bg-green-500 disabled:bg-green-600/50 disabled:cursor-not-allowed text-white text-xs sm:text-sm font-medium py-2 px-3 sm:px-4 rounded-lg transition-all duration-200 select-none cursor-pointer flex items-center justify-center gap-2"
                               >
-                                {buttonAction.text}
+                                {isLoading && (
+                                  <svg
+                                    className="w-3 h-3 animate-spin"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                                    />
+                                  </svg>
+                                )}
+                                {isLoading ? "Accepting..." : buttonAction.text}
                               </button>
                             );
                           }
 
+                          // Mark as completed button
                           if (buttonAction.type === "markCompleted") {
                             return (
                               <button
                                 onClick={() =>
                                   handleMarkAsCompleted(submission._id)
                                 }
-                                className="flex-1 bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm font-medium py-2 px-3 sm:px-4 rounded-lg transition-all duration-200 select-none cursor-pointer"
+                                disabled={isLoading}
+                                className="flex-1 bg-blue-600 hover:bg-blue-500 disabled:bg-blue-600/50 disabled:cursor-not-allowed text-white text-xs sm:text-sm font-medium py-2 px-3 sm:px-4 rounded-lg transition-all duration-200 select-none cursor-pointer flex items-center justify-center gap-2"
                               >
-                                {buttonAction.text}
+                                {isLoading && (
+                                  <svg
+                                    className="w-3 h-3 animate-spin"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                                    />
+                                  </svg>
+                                )}
+                                {isLoading
+                                  ? "Completing..."
+                                  : buttonAction.text}
                               </button>
                             );
                           }
@@ -657,6 +741,7 @@ function ContentSection({ activeTab, apiEndpoint, employeeId }: any) {
                     </div>
                   ))
                 ) : (
+                  // No submissions found
                   <div className="col-span-full text-center py-8">
                     <p className="text-gray-400 text-sm">
                       No {statusFilter} submissions found.
@@ -666,6 +751,7 @@ function ContentSection({ activeTab, apiEndpoint, employeeId }: any) {
               </div>
             </>
           ) : (
+            // No submissions found
             <div className="text-center py-8 sm:py-12 bg-[#1A1E23] rounded-lg border border-gray-700">
               <div className="text-gray-400 mb-2">
                 <svg

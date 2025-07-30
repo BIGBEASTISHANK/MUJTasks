@@ -12,7 +12,7 @@ import {
 } from "react-icons/md";
 import VerifyingDB from "@/Utility/VerifyingDB";
 
-export default function AdminLogin() {
+export default function EmployeeLogin() {
   // Variables
   const [formData, setFormData] = useState({
     email: "",
@@ -41,7 +41,7 @@ export default function AdminLogin() {
 
         if (response.ok) {
           // Already authenticated, redirect to dashboard
-          router.push("/admin/dashboard");
+          router.push("/employee/dashboard");
           return;
         }
 
@@ -110,7 +110,7 @@ export default function AdminLogin() {
       }
 
       // Refresh the page
-      router.push("/admin/dashboard");
+      router.push("/employee/dashboard");
     } catch (error) {
       setLoginError("Internal Server Error");
     }
@@ -142,10 +142,10 @@ export default function AdminLogin() {
           </div>
 
           <h2 className="text-3xl font-bold text-white mb-2">
-            Admin <span className="text-[#1793D1]">Login</span>
+            Employee <span className="text-[#1793D1]">Login</span>
           </h2>
           <p className="text-gray-400">
-            Access the admin dashboard to manage projects and requests
+            Access the employee dashboard to manage projects and requests
           </p>
         </motion.div>
 
@@ -271,7 +271,7 @@ export default function AdminLogin() {
           {/* Additional Info */}
           <div className="mt-6 pt-6 border-t border-gray-700">
             <p className="text-center text-gray-400 text-sm select-none">
-              Secure admin access to manage project requests and system settings
+              Secure employee access to manage project requests and system settings
             </p>
           </div>
         </motion.div>
