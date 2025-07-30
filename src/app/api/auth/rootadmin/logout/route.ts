@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 
 export async function GET(req: NextRequest) {
   try {
-    const token = req.cookies.get("employeeToken")?.value;
+    const token = req.cookies.get("rootAdminToken")?.value;
 
     if (!token) {
       return NextResponse.json(
