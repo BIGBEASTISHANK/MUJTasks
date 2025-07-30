@@ -107,6 +107,7 @@ export default function RootLogin() {
       // Check if login was successful
       if (!response.ok) {
         setLoginError(data.error);
+        setIsSubmitting(false);
         return;
       }
 
@@ -114,8 +115,6 @@ export default function RootLogin() {
       router.push("/rootadmin/dashboard");
     } catch (error) {
       setLoginError("Internal Server Error");
-    } finally {
-      setIsSubmitting(false);
     }
   };
 

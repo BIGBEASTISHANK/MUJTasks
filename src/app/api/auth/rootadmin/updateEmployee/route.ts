@@ -104,7 +104,7 @@ export async function PUT(req: NextRequest) {
         name: name.trim(),
         email: email.toLowerCase().trim(),
         mobile: mobile.trim(),
-        password: password, // Storing password as plain text
+        password: password,
         task: task || [],
       },
       {

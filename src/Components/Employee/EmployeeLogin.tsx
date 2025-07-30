@@ -106,6 +106,7 @@ export default function EmployeeLogin() {
       // Check if login was successful
       if (!response.ok) {
         setLoginError(data.error);
+        setIsSubmitting(false);
         return;
       }
 
