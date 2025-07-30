@@ -9,10 +9,11 @@ import {
   MdVisibilityOff,
   MdLogin,
   MdError,
+  MdSecurity,
 } from "react-icons/md";
 import VerifyingDB from "@/Utility/VerifyingDB";
 
-export default function EmployeeLogin() {
+export default function RootLogin() {
   // Variables
   const [formData, setFormData] = useState({
     email: "",
@@ -31,7 +32,7 @@ export default function EmployeeLogin() {
     async function checkAuth() {
       try {
         // Getting verification response
-        const response = await fetch("/api/auth/employee/verify", {
+        const response = await fetch("/api/auth/rootadmin/verify", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -41,7 +42,7 @@ export default function EmployeeLogin() {
 
         if (response.ok) {
           // Already authenticated, redirect to dashboard
-          router.push("/employee/dashboard");
+          router.push("/rootadmin/dashboard");
           return;
         }
 
@@ -90,7 +91,7 @@ export default function EmployeeLogin() {
 
     try {
       // Sending login request
-      const response = await fetch("/api/auth/employee/login", {
+      const response = await fetch("/api/auth/rootadmin/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -110,9 +111,11 @@ export default function EmployeeLogin() {
       }
 
       // Refresh the page
-      router.push("/employee/dashboard");
+      router.push("/rootadmin/dashboard");
     } catch (error) {
       setLoginError("Internal Server Error");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -123,7 +126,7 @@ export default function EmployeeLogin() {
 
   // Show loading screen while verifying authentication
   if (isVerifying) {
-    return <VerifyingDB />;
+    return <VerifyingDB isRoot={true} />;
   }
 
   // Show login form if not authenticated
@@ -137,15 +140,15 @@ export default function EmployeeLogin() {
           transition={{ duration: 0.6 }}
           className="text-center mb-8"
         >
-          <div className="bg-[#1793D1] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-            <MdLock className="w-8 h-8 text-white" />
+          <div className="bg-[#DC2626] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+            <MdSecurity className="w-8 h-8 text-white" />
           </div>
 
           <h2 className="text-3xl font-bold text-white mb-2">
-            Employee <span className="text-[#1793D1]">Login</span>
+            Root Admin <span className="text-[#DC2626]">Login</span>
           </h2>
           <p className="text-gray-400">
-            Access the employee dashboard to manage projects and requests
+            Access the root administration panel with elevated privileges
           </p>
         </motion.div>
 
@@ -184,7 +187,7 @@ export default function EmployeeLogin() {
                   value={formData.email}
                   onChange={handleLoginInputChange}
                   required
-                  className="w-full bg-[#1A1E23] border border-gray-700 rounded-lg px-4 py-3 pl-12 text-white focus:outline-none focus:ring-2 focus:ring-[#1793D1] focus:border-transparent transition-all"
+                  className="w-full bg-[#1A1E23] border border-gray-700 rounded-lg px-4 py-3 pl-12 text-white focus:outline-none focus:ring-2 focus:ring-[#DC2626] focus:border-transparent transition-all"
                   placeholder="Enter your email address"
                 />
                 <MdEmail className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 transform -translate-y-1/2" />
@@ -207,7 +210,7 @@ export default function EmployeeLogin() {
                   value={formData.password}
                   onChange={handleLoginInputChange}
                   required
-                  className="w-full bg-[#1A1E23] border border-gray-700 rounded-lg px-4 py-3 pl-12 pr-12 text-white focus:outline-none focus:ring-2 focus:ring-[#1793D1] focus:border-transparent transition-all"
+                  className="w-full bg-[#1A1E23] border border-gray-700 rounded-lg px-4 py-3 pl-12 pr-12 text-white focus:outline-none focus:ring-2 focus:ring-[#DC2626] focus:border-transparent transition-all"
                   placeholder="Enter your password"
                 />
                 <MdLock className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 transform -translate-y-1/2" />
@@ -229,7 +232,7 @@ export default function EmployeeLogin() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className={`w-full bg-[#1793D1] hover:bg-[#1793D1]/80 text-white font-bold py-3 px-6 rounded-lg shadow-lg shadow-[#1793D1]/30 transition-all duration-300 flex items-center justify-center select-none ${
+              className={`w-full bg-[#DC2626] hover:bg-[#DC2626]/80 text-white font-bold py-3 px-6 rounded-lg shadow-lg shadow-[#DC2626]/30 transition-all duration-300 flex items-center justify-center select-none ${
                 isSubmitting
                   ? "opacity-70 cursor-not-allowed"
                   : "cursor-pointer"
@@ -262,7 +265,7 @@ export default function EmployeeLogin() {
               ) : (
                 <>
                   <MdLogin className="w-5 h-5 mr-2" />
-                  <span className="select-none">Sign In to Dashboard</span>
+                  <span className="select-none">Access Admin Panel</span>
                 </>
               )}
             </button>
@@ -271,7 +274,7 @@ export default function EmployeeLogin() {
           {/* Additional Info */}
           <div className="mt-6 pt-6 border-t border-gray-700">
             <p className="text-center text-gray-400 text-sm select-none">
-              Secure employee access to manage project requests and system settings
+              Secure root administrator access with full system privileges
             </p>
           </div>
         </motion.div>

@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 
 export async function GET(req: NextRequest) {
   try {
-    const token = req.cookies.get("adminToken")?.value;
+    const token = req.cookies.get("employeeToken")?.value;
 
     if (!token) {
       return NextResponse.json(
@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
     );
 
     // Clear the cookie properly with all security flags
-    response.cookies.set("adminToken", "", {
+    response.cookies.set("employeeToken", "", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production", // HTTPS only in production
       sameSite: "strict",
@@ -46,7 +46,7 @@ export async function GET(req: NextRequest) {
       { status: 500 }
     );
 
-    response.cookies.set("adminToken", "", {
+    response.cookies.set("employeeToken", "", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",

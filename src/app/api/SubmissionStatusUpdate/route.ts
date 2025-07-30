@@ -10,7 +10,7 @@ export async function PUT(req: NextRequest) {
     const cookies = req.cookies.toString();
 
     const verifyResponse = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/verifyEmployee`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/employee/verify`,
       {
         method: "GET",
         headers: {

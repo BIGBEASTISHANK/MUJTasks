@@ -122,7 +122,7 @@ const authenticateGoogle = () => {
       client_email: clientEmail,
       client_id: serviceAccountClientId,
     },
-    scopes: "https://www.googleapis.com/auth/drive",
+    scopes: "https://www.googleapis.com/auth/employee/drive",
   });
 
   return auth;
@@ -164,7 +164,7 @@ export async function GET(req: NextRequest) {
     const cookies = req.cookies.toString();
 
     const verifyResponse = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/verifyEmployee`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/employee/verify`,
       {
         method: "GET",
         headers: {

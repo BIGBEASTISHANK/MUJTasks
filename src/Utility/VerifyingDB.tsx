@@ -6,7 +6,10 @@ export default function VerifyingDB({
   headerText = "Verifying Access",
   subHeaderText = "Please wait while we authenticate your session...",
   fullScreen = true,
+  isRoot = false,
 }: any) {
+  const primaryColor = isRoot ? "#DC2626" : "#1793D1";
+
   return (
     <div
       className={`${
@@ -20,7 +23,10 @@ export default function VerifyingDB({
         className="text-center"
       >
         {/* Loading Icon */}
-        <div className="bg-[#1793D1] w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 relative">
+        <div
+          className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 relative"
+          style={{ backgroundColor: primaryColor }}
+        >
           <MdSecurity className="w-10 h-10 text-white" />
 
           {/* Spinning Border */}
@@ -51,7 +57,8 @@ export default function VerifyingDB({
           {[0, 1, 2].map((index) => (
             <motion.div
               key={index}
-              className="w-3 h-3 bg-[#1793D1] rounded-full"
+              className="w-3 h-3 rounded-full"
+              style={{ backgroundColor: primaryColor }}
               animate={{
                 scale: [1, 1.2, 1],
                 opacity: [0.5, 1, 0.5],

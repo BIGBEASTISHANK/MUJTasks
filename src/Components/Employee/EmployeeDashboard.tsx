@@ -39,7 +39,7 @@ export default function EmployeeDashboardComponent() {
   const handleLogout = async () => {
     setIsVerifying(true);
     try {
-      await fetch("/api/auth/logout", {
+      await fetch("/api/auth/employee/logout", {
         method: "GET",
         credentials: "include",
       });
@@ -51,9 +51,9 @@ export default function EmployeeDashboardComponent() {
 
   useEffect(() => {
     // verify employee authentication and fetch data on mount
-    async function verifyEmployee() {
+    async function verify() {
       try {
-        const response = await fetch("/api/auth/verifyEmployee", {
+        const response = await fetch("/api/auth/employee/verify", {
           method: "GET",
           credentials: "include",
         });
@@ -79,13 +79,12 @@ export default function EmployeeDashboardComponent() {
         setIsAuthenticated(true);
       } catch (error) {
         console.error("Verification failed:", error);
-        router.push("/employee");
       } finally {
         setIsVerifying(false);
       }
     }
 
-    verifyEmployee();
+    verify();
   }, [router]);
 
   // Verification loading screen

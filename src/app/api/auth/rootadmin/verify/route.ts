@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
     }
 
     // Get token from cookies
-    const token = req.cookies.get("adminToken")?.value;
+    const token = req.cookies.get("rootAdminToken")?.value;
 
     if (!token) {
       return NextResponse.json(
@@ -25,11 +25,11 @@ export async function GET(req: NextRequest) {
 
     // Verify JWT token
     const decoded = jwt.verify(token, process.env.JWT_SECRET) as {
-      id: string;
+      isRootAdmin: boolean;
     };
 
     // Validate user ID
-    if (!decoded.id) {
+    if (!decoded.isRootAdmin) {
       return NextResponse.json(
         { error: "Invalid token" },
         { status: 401 }
@@ -40,14 +40,12 @@ export async function GET(req: NextRequest) {
     await dbConnect();
 
     // Find employee and exclude password
-    const employeeDetails = await EmployeeDetails.findById(decoded.id).select(
-      "-password"
-    );
+    const employeeDetails = await EmployeeDetails.find()
 
     // Check if employee exists
     if (!employeeDetails) {
       return NextResponse.json(
-        { error: "Employee not found" },
+        { error: "No employee found" },
         { status: 401 }
       );
     }
@@ -57,13 +55,7 @@ export async function GET(req: NextRequest) {
       {
         success: true,
         message: "Admin verified successfully",
-        employeeData: {
-          _id: employeeDetails._id,
-          email: employeeDetails.email,
-          name: employeeDetails.name,
-          mobile: employeeDetails.mobile,
-          task: employeeDetails.task,
-        },
+        employeeData: employeeDetails
       },
       { status: 200 }
     );
