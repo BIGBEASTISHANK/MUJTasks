@@ -46,7 +46,7 @@ export async function GET(req: NextRequest) {
       { status: 500 }
     );
 
-    response.cookies.set("employeeToken", "", {
+    response.cookies.set("rootAdminToken", "", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
