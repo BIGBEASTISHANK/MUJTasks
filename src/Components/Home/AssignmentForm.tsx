@@ -44,9 +44,9 @@ export default function AssignmentForm() {
     const selectedFile = e.target.files?.[0];
 
     if (selectedFile) {
-      // Check file size (15MB = 15 * 1024 * 1024 bytes)
-      if (selectedFile.size > 15 * 1024 * 1024) {
-        setFileError("File size must be less than 15MB");
+      // Check file size (4.5MB = 4.5 * 1024 * 1024 bytes)
+      if (selectedFile.size > 4.5 * 1024 * 1024) {
+        setFileError("File size must be less than 4.5MB");
         setFile(null);
       } else if (!selectedFile.type.includes("pdf")) {
         setFileError("Only PDF files are allowed");
@@ -321,7 +321,7 @@ export default function AssignmentForm() {
                   htmlFor="file"
                   className="block text-gray-200 mb-2 font-medium"
                 >
-                  Upload Assignment/Lab Manual (PDF, max 15MB)
+                  Upload Assignment/Lab Manual (PDF, max 4.5MB)
                 </label>
                 <div className="flex items-center justify-center w-full">
                   <label
@@ -350,7 +350,7 @@ export default function AssignmentForm() {
                         or drag and drop
                       </p>
                       <p className="text-xs text-gray-400">
-                        PDF only (MAX. 15MB)
+                        PDF only (MAX. 4.5MB)
                       </p>
                     </div>
                     <input

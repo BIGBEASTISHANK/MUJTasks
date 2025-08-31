@@ -39,8 +39,8 @@ export default function CSEProjectAssistance() {
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (selectedFile) {
-      if (selectedFile.size > 15 * 1024 * 1024) {
-        setFileError("File size must be less than 15MB");
+      if (selectedFile.size > 4.5 * 1024 * 1024) {
+        setFileError("File size must be less than 4.5MB");
         setFile(null);
       } else if (!selectedFile.type.includes("pdf")) {
         setFileError("Only PDF files are allowed");
@@ -263,7 +263,7 @@ export default function CSEProjectAssistance() {
               {/* File Upload Field */}
               <div>
                 <label htmlFor="cse-file" className="block text-gray-200 mb-2 font-medium">
-                  Upload Project/Problem Statement (PDF, max 15MB)
+                  Upload Project/Problem Statement (PDF, max 4.5MB)
                 </label>
                 <div className="flex items-center justify-center w-full">
                   <label
@@ -290,7 +290,7 @@ export default function CSEProjectAssistance() {
                       <p className="mb-2 text-sm text-gray-400">
                         <span className="font-semibold">Click to upload</span> or drag and drop
                       </p>
-                      <p className="text-xs text-gray-400">PDF only (MAX. 15MB)</p>
+                      <p className="text-xs text-gray-400">PDF only (MAX. 4.5MB)</p>
                     </div>
                     <input
                       id="cse-file"
