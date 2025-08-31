@@ -122,7 +122,7 @@ const authenticateGoogle = () => {
       client_email: clientEmail,
       client_id: serviceAccountClientId,
     },
-    scopes: "https://www.googleapis.com/auth/employee/drive",
+    scopes: "https://www.googleapis.com/auth/drive",
   });
 
   return auth;
