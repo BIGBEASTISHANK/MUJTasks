@@ -31,7 +31,7 @@ export async function PUT(req: NextRequest) {
     const data = await req.json();
     console.log("AssignSubmission request received:", data);
 
-    const { submissionId, employeeId, action } = data;
+    const { submissionId, employeeId, chargedPrice, action } = data;
 
     // Validate required fields
     if (!submissionId) {
@@ -44,6 +44,13 @@ export async function PUT(req: NextRequest) {
     if (!employeeId) {
       return NextResponse.json(
         { error: "Employee ID is required" },
+        { status: 400 }
+      );
+    }
+
+    if (chargedPrice < 1 || chargedPrice == null) {
+      return NextResponse.json(
+        { error: "Charged Price is required" },
         { status: 400 }
       );
     }
@@ -105,6 +112,7 @@ export async function PUT(req: NextRequest) {
         }
         updateData = {
           status: "completed",
+          chargedPrice: chargedPrice,
           completedOn: new Date(), // Set completed date
         };
         successMessage = "Submission marked as completed successfully";
