@@ -3,9 +3,17 @@ import EmployeeDetails from "@/lib/models/EmployeeDetails";
 import { GetTaskDisplayName, TaskType } from "@/Utility/TaskTypes";
 import { MailtrapClient } from "mailtrap";
 import { NextRequest, NextResponse } from "next/server";
+import { isDisabled } from "@@/data/GlobalVar";
 
 export async function POST(req: NextRequest) {
     try {
+        // Checking if is disabled
+        if (isDisabled)
+            return NextResponse.json(
+                { error: "API is disabled by owner" },
+                { status: 401 }
+            );
+
         const { type, TOKEN } = await req.json();
 
         // Validate input type
