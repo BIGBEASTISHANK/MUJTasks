@@ -23,8 +23,8 @@ export default function Hero() {
                     className="bg-gradient-to-r from-[#1793D1]/20 via-[#232930] to-[#1793D1]/20 py-4 border-y border-[#1793D1]/30 items-center"
                 >
                     <span className="text-[#1793D1] font-bold text-lg md:text-xl mx-8 flex items-center">
-                        ⚠️ Website is disabled due to year breaks - We'll be
-                        back soon!
+                        🛠️ Website is currently under maintenance - Thank you
+                        for your patience!
                     </span>
                     <span className="text-gray-300 font-medium text-lg md:text-xl mx-8">
                         •
@@ -37,8 +37,8 @@ export default function Hero() {
                         •
                     </span>
                     <span className="text-[#1793D1] font-bold text-lg md:text-xl mx-8 flex items-center">
-                        ⚠️ Website is disabled due to year breaks - We'll be
-                        back soon!
+                        🛠️ Website is currently under maintenance - Thank you
+                        for your patience!
                     </span>
                 </Marquee>
             </div>
