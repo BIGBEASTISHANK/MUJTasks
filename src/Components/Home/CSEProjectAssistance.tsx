@@ -56,7 +56,7 @@ export default function CSEProjectAssistance() {
       submitData.append("projectTitle", formData.projectTitle);
       submitData.append("projectType", formData.projectType);
       submitData.append("deadline", formData.deadline);
-      submitData.append("file", formData.fileLink);
+      submitData.append("fileLink", formData.fileLink);
 
       const response = await fetch("/api/ProjectAssistanceFormSubmission", {
         method: "POST",

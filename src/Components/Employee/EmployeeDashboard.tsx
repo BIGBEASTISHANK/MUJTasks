@@ -28,7 +28,7 @@ export default function EmployeeDashboardComponent() {
   // Dynamic api
   const availableTabs = [
     { id: 1, apiEndpoint: "/api/AssignmentFormSubmission" },
-    { id: 2, apiEndpoint: "/api/ProjectsSubmission" },
+    { id: 2, apiEndpoint: "/api/ProjectAssistanceFormSubmission" },
   ];
 
   const visibleTabs = availableTabs.filter((tab) =>
