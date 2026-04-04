@@ -11,10 +11,10 @@ export default function AssignmentForm() {
     estimatedPages: "",
     subject: "",
     deadline: "",
+    fileLink: "",
   });
 
   const [file, setFile] = useState<File | null>(null);
-  const [fileError, setFileError] = useState("");
   const [mobileError, setMobileError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
@@ -40,36 +40,12 @@ export default function AssignmentForm() {
     }
   };
 
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target.files?.[0];
-
-    if (selectedFile) {
-      // Check file size (4.5MB = 4.5 * 1024 * 1024 bytes)
-      if (selectedFile.size > 4.5 * 1024 * 1024) {
-        setFileError("File size must be less than 4.5MB");
-        setFile(null);
-      } else if (!selectedFile.type.includes("pdf")) {
-        setFileError("Only PDF files are allowed");
-        setFile(null);
-      } else {
-        setFileError("");
-        setFile(selectedFile);
-      }
-    }
-  };
-
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
     // Validate mobile number
     if (formData.mobile.length !== 10) {
       setMobileError("Mobile number must be exactly 10 digits");
-      return;
-    }
-
-    // Validate file
-    if (!file) {
-      setFileError("Please upload your assignment or lab manual PDF");
       return;
     }
 
@@ -85,7 +61,7 @@ export default function AssignmentForm() {
       submitData.append("estimatedPages", formData.estimatedPages);
       submitData.append("subject", formData.subject);
       submitData.append("deadline", formData.deadline);
-      submitData.append("file", file);
+      submitData.append("fileLink", formData.fileLink);
 
       // Log the data being sent for debugging
       console.log("Submitting form with data:", {
@@ -95,8 +71,7 @@ export default function AssignmentForm() {
         estimatedPages: formData.estimatedPages,
         subject: formData.subject,
         deadline: formData.deadline,
-        fileName: file.name,
-        fileSize: file.size,
+        fileLink: formData.fileLink,
       });
 
       // Send data to API endpoint
@@ -113,7 +88,7 @@ export default function AssignmentForm() {
 
       if (!response.ok) {
         throw new Error(
-          result.error || result.details || "Failed to submit form"
+          result.error || result.details || "Failed to submit form",
         );
       }
 
@@ -128,6 +103,7 @@ export default function AssignmentForm() {
           estimatedPages: "",
           subject: "",
           deadline: "",
+          fileLink: "",
         });
         setFile(null);
         setSubmitSuccess(false);
@@ -135,7 +111,7 @@ export default function AssignmentForm() {
     } catch (error) {
       console.error("Error submitting form:", error);
       setSubmitError(
-        error instanceof Error ? error.message : "Failed to submit form"
+        error instanceof Error ? error.message : "Failed to submit form",
       );
     } finally {
       setIsSubmitting(false);
@@ -321,57 +297,18 @@ export default function AssignmentForm() {
                   htmlFor="file"
                   className="block text-gray-200 mb-2 font-medium"
                 >
-                  Upload Assignment/Lab Manual (PDF, max 4.5MB)
+                  Upload Assignment/Lab Manual PDF link
                 </label>
-                <div className="flex items-center justify-center w-full">
-                  <label
-                    htmlFor="file"
-                    className={`flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer hover:bg-[#1A1E23]/70 ${
-                      fileError ? "border-red-500" : "border-gray-600"
-                    } bg-[#1A1E23] transition-all`}
-                  >
-                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                      <svg
-                        className="w-8 h-8 mb-3 text-gray-400"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                        ></path>
-                      </svg>
-                      <p className="mb-2 text-sm text-gray-400">
-                        <span className="font-semibold">Click to upload</span>{" "}
-                        or drag and drop
-                      </p>
-                      <p className="text-xs text-gray-400">
-                        PDF only (MAX. 4.5MB)
-                      </p>
-                    </div>
-                    <input
-                      id="file"
-                      type="file"
-                      accept=".pdf"
-                      className="hidden"
-                      onChange={handleFileChange}
-                      required
-                    />
-                  </label>
-                </div>
-                {fileError && (
-                  <p className="text-red-500 text-sm mt-1">{fileError}</p>
-                )}
-                {file && (
-                  <p className="text-green-400 text-sm mt-2">
-                    File selected: {file.name} (
-                    {(file.size / (1024 * 1024)).toFixed(2)} MB)
-                  </p>
-                )}
+                <input
+                  type="text"
+                  id="fileLink"
+                  name="fileLink"
+                  value={formData.fileLink}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full bg-[#1A1E23] border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-[#1793D1] transition-all"
+                  placeholder="Upload file link of google drive or any other place."
+                />
               </div>
 
               {/* Submit Button */}

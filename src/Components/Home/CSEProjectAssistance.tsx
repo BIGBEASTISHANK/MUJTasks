@@ -11,16 +11,17 @@ export default function CSEProjectAssistance() {
     projectTitle: "",
     projectType: "",
     deadline: "",
+    fileLink: "",
   });
 
-  const [file, setFile] = useState<File | null>(null);
-  const [fileError, setFileError] = useState("");
   const [mobileError, setMobileError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState("");
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
     const { name, value } = e.target;
 
     if (name === "mobile") {
@@ -36,31 +37,11 @@ export default function CSEProjectAssistance() {
     }
   };
 
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target.files?.[0];
-    if (selectedFile) {
-      if (selectedFile.size > 4.5 * 1024 * 1024) {
-        setFileError("File size must be less than 4.5MB");
-        setFile(null);
-      } else if (!selectedFile.type.includes("pdf")) {
-        setFileError("Only PDF files are allowed");
-        setFile(null);
-      } else {
-        setFileError("");
-        setFile(selectedFile);
-      }
-    }
-  };
-
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
     if (formData.mobile.length !== 10) {
       setMobileError("Mobile number must be exactly 10 digits");
-      return;
-    }
-    if (!file) {
-      setFileError("Please upload your project/problem statement PDF");
       return;
     }
 
@@ -75,7 +56,7 @@ export default function CSEProjectAssistance() {
       submitData.append("projectTitle", formData.projectTitle);
       submitData.append("projectType", formData.projectType);
       submitData.append("deadline", formData.deadline);
-      submitData.append("file", file);
+      submitData.append("file", formData.fileLink);
 
       const response = await fetch("/api/ProjectAssistanceFormSubmission", {
         method: "POST",
@@ -85,7 +66,9 @@ export default function CSEProjectAssistance() {
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.error || result.details || "Failed to submit form");
+        throw new Error(
+          result.error || result.details || "Failed to submit form",
+        );
       }
 
       setSubmitSuccess(true);
@@ -98,12 +81,14 @@ export default function CSEProjectAssistance() {
           projectTitle: "",
           projectType: "",
           deadline: "",
+          fileLink: "",
         });
-        setFile(null);
         setSubmitSuccess(false);
       }, 10000);
     } catch (error) {
-      setSubmitError(error instanceof Error ? error.message : "Failed to submit form");
+      setSubmitError(
+        error instanceof Error ? error.message : "Failed to submit form",
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -123,7 +108,9 @@ export default function CSEProjectAssistance() {
             <span className="text-[#1793D1]">CSE Project</span> Assistance
           </h2>
           <p className="text-lg text-gray-300 max-w-2xl mx-auto">
-            Need help with your CSE project? Submit your project details and requirements below, and our team will help you build your class project from scratch or assist wherever you need!
+            Need help with your CSE project? Submit your project details and
+            requirements below, and our team will help you build your class
+            project from scratch or assist wherever you need!
           </p>
         </motion.div>
 
@@ -137,8 +124,12 @@ export default function CSEProjectAssistance() {
           {submitSuccess ? (
             <div className="text-center py-10">
               <div className="text-[#1793D1] text-6xl mb-4">✓</div>
-              <h3 className="text-2xl font-bold text-white mb-2">Request Submitted!</h3>
-              <p className="text-gray-300">We'll contact you shortly to discuss your project.</p>
+              <h3 className="text-2xl font-bold text-white mb-2">
+                Request Submitted!
+              </h3>
+              <p className="text-gray-300">
+                We'll contact you shortly to discuss your project.
+              </p>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -151,7 +142,10 @@ export default function CSEProjectAssistance() {
               <div className="grid md:grid-cols-2 gap-6">
                 {/* Name Field */}
                 <div>
-                  <label htmlFor="cse-name" className="block text-gray-200 mb-2 font-medium">
+                  <label
+                    htmlFor="cse-name"
+                    className="block text-gray-200 mb-2 font-medium"
+                  >
                     Full Name
                   </label>
                   <input
@@ -168,7 +162,10 @@ export default function CSEProjectAssistance() {
 
                 {/* Branch Field */}
                 <div>
-                  <label htmlFor="cse-branch" className="block text-gray-200 mb-2 font-medium">
+                  <label
+                    htmlFor="cse-branch"
+                    className="block text-gray-200 mb-2 font-medium"
+                  >
                     Branch
                   </label>
                   <input
@@ -185,7 +182,10 @@ export default function CSEProjectAssistance() {
 
                 {/* Mobile Number Field */}
                 <div>
-                  <label htmlFor="cse-mobile" className="block text-gray-200 mb-2 font-medium">
+                  <label
+                    htmlFor="cse-mobile"
+                    className="block text-gray-200 mb-2 font-medium"
+                  >
                     Mobile Number
                   </label>
                   <input
@@ -201,12 +201,17 @@ export default function CSEProjectAssistance() {
                     } rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-[#1793D1] transition-all`}
                     placeholder="10-digit mobile number"
                   />
-                  {mobileError && <p className="text-red-500 text-sm mt-1">{mobileError}</p>}
+                  {mobileError && (
+                    <p className="text-red-500 text-sm mt-1">{mobileError}</p>
+                  )}
                 </div>
 
                 {/* Project Title Field */}
                 <div>
-                  <label htmlFor="cse-projectTitle" className="block text-gray-200 mb-2 font-medium">
+                  <label
+                    htmlFor="cse-projectTitle"
+                    className="block text-gray-200 mb-2 font-medium"
+                  >
                     Project Title
                   </label>
                   <input
@@ -223,7 +228,10 @@ export default function CSEProjectAssistance() {
 
                 {/* Project Type Field */}
                 <div>
-                  <label htmlFor="cse-projectType" className="block text-gray-200 mb-2 font-medium">
+                  <label
+                    htmlFor="cse-projectType"
+                    className="block text-gray-200 mb-2 font-medium"
+                  >
                     Project Type
                   </label>
                   <select
@@ -234,7 +242,9 @@ export default function CSEProjectAssistance() {
                     required
                     className="w-full bg-[#1A1E23] border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-[#1793D1] transition-all"
                   >
-                    <option value="" disabled>Select type</option>
+                    <option value="" disabled>
+                      Select type
+                    </option>
                     <option value="minor">Minor Project</option>
                     <option value="major">Major Project</option>
                     <option value="mini">Mini Project</option>
@@ -244,7 +254,10 @@ export default function CSEProjectAssistance() {
 
                 {/* Deadline Field */}
                 <div>
-                  <label htmlFor="cse-deadline" className="block text-gray-200 mb-2 font-medium">
+                  <label
+                    htmlFor="cse-deadline"
+                    className="block text-gray-200 mb-2 font-medium"
+                  >
                     Deadline
                   </label>
                   <input
@@ -254,7 +267,7 @@ export default function CSEProjectAssistance() {
                     value={formData.deadline}
                     onChange={handleInputChange}
                     required
-                    min={new Date().toISOString().split('T')[0]}
+                    min={new Date().toISOString().split("T")[0]}
                     className="w-full bg-[#1A1E23] border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-[#1793D1] transition-all"
                   />
                 </div>
@@ -262,52 +275,22 @@ export default function CSEProjectAssistance() {
 
               {/* File Upload Field */}
               <div>
-                <label htmlFor="cse-file" className="block text-gray-200 mb-2 font-medium">
-                  Upload Project/Problem Statement (PDF, max 4.5MB)
+                <label
+                  htmlFor="cse-file"
+                  className="block text-gray-200 mb-2 font-medium"
+                >
+                  Upload Project/Problem Statement PDF link
                 </label>
-                <div className="flex items-center justify-center w-full">
-                  <label
-                    htmlFor="cse-file"
-                    className={`flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer hover:bg-[#1A1E23]/70 ${
-                      fileError ? "border-red-500" : "border-gray-600"
-                    } bg-[#1A1E23] transition-all`}
-                  >
-                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                      <svg
-                        className="w-8 h-8 mb-3 text-gray-400"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                        ></path>
-                      </svg>
-                      <p className="mb-2 text-sm text-gray-400">
-                        <span className="font-semibold">Click to upload</span> or drag and drop
-                      </p>
-                      <p className="text-xs text-gray-400">PDF only (MAX. 4.5MB)</p>
-                    </div>
-                    <input
-                      id="cse-file"
-                      type="file"
-                      accept=".pdf"
-                      className="hidden"
-                      onChange={handleFileChange}
-                      required
-                    />
-                  </label>
-                </div>
-                {fileError && <p className="text-red-500 text-sm mt-1">{fileError}</p>}
-                {file && (
-                  <p className="text-green-400 text-sm mt-2">
-                    File selected: {file.name} ({(file.size / (1024 * 1024)).toFixed(2)} MB)
-                  </p>
-                )}
+                <input
+                  type="text"
+                  id="fileLink"
+                  name="fileLink"
+                  value={formData.fileLink}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full bg-[#1A1E23] border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-[#1793D1] transition-all"
+                  placeholder="Upload file link of google drive or any other place."
+                />
               </div>
 
               {/* Submit Button */}
@@ -316,14 +299,32 @@ export default function CSEProjectAssistance() {
                   type={isDisabled ? "button" : "submit"}
                   disabled={isSubmitting || isDisabled}
                   className={`bg-[#1793D1] hover:bg-[#1793D1]/80 text-white font-bold py-3 px-10 rounded-full shadow-lg shadow-[#1793D1]/30 transition-all duration-300 ${
-                    isSubmitting || isDisabled ? "opacity-70 cursor-not-allowed" : "cursor-pointer"
+                    isSubmitting || isDisabled
+                      ? "opacity-70 cursor-not-allowed"
+                      : "cursor-pointer"
                   }`}
                 >
                   {isSubmitting ? (
                     <div className="flex items-center">
-                      <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      <svg
+                        className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
                       </svg>
                       Processing...
                     </div>
