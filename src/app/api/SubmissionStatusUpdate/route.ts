@@ -48,7 +48,7 @@ export async function PUT(req: NextRequest) {
       );
     }
 
-    if (chargedPrice < 1 || chargedPrice == null) {
+    if ((chargedPrice < 1 || chargedPrice == null) && action === "markCompleted") {
       return NextResponse.json(
         { error: "Charged Price is required" },
         { status: 400 }
